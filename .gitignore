@@ -1,0 +1,9 @@
+*.pyc
+*~
+__pycache__
+.venv
+sols/db.sqlite3
+sols/static
+sols/staticfiles
+sols/.DS_Store
+sols/uploads

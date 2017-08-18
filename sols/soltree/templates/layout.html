@@ -1,0 +1,28 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <title>{% block page_title %}soltree{% endblock %}</title>
+  <meta charset="utf-8">
+  <script = type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/problem.css' %}"/>
+</head>
+
+<body>
+  <div id='div-body'>
+    <div id="div-problem">
+      <text style="color:blue;font-size:30px">Question</text>
+      <p id="question-body">
+        한 모서리의 길이가 4인 정사면체 ABCD에서 삼각형 ABC의 무게중심을 O,
+        선분 AD의 중점을 P라 하자. 정사면체 ABCD의 한변 BCD위의 점 Q에 대하여, 두벡터 OQ와 OP가 서로 수직일때
+        |PQ|의 최댓값을 구하여라.
+      </p>
+    </div>
+    {% block content %}
+    {% endblock %}
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div style="padding:10px">
+    <div style='float : left; width : 50%'>
+      Check your answer
+    </div>
+    <div style='float: left; width : 50%; text-align:right; text-decoration : underline; color :blue'>
+      rotate
+    </div>
+    <img style="max-width: 100%; max-height : 80%; height:auto;" src="{{img_url}}" data-rotate="0"/>
+  </div>
+  <p>
+    <script>
+      function next_click(){
+        var cur_url = '{{request.get_full_path}}';
+        var next_url = cur_url.replace('check', 'tag');
+        location.href = next_url;
+      }
+      $('img').each(function() {
+      var deg = $(this).data('rotate') || 0;
+      var rotate = 'rotate(' + deg + 'deg)';
+      $(this).css({
+          '-webkit-transform': rotate,
+          '-moz-transform': rotate,
+          '-o-transform': rotate,
+          '-ms-transform': rotate,
+          'transform': rotate
+          });
+      });
+    </script>
+    <button onclick="next_click()" type="submit">next</button>
+  </p>
+{% endblock %}

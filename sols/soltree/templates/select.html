@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
+  <link rel="stylesheet" href="{% static 'css/select.css' %}">
+  <div style="padding:10px">
+    <p> select matching step in existing tree with your solution</p>
+    <div id="div-soltree" style="width:100%">
+    </div>
+  </div>
+<script type="text/javascript" src = "{% static 'js/raphael.js' %}"></script>
+<script type="text/javascript" src = "{% static 'js/Treant.js' %}"></script>
+<script>
+  var chart_config = {{chart_config|safe}};
+</script>
+<script type="text/javascript" src="{% static 'js/soltree.js' %}"></script>
+
+<script>
+  new Treant(chart_config, null , $);
+  var sum_data = [];
+  {% for key, value in data.items %}
+    if('{{key}}'.includes('sum'))
+      sum_data.push('{{value}}');
+  {%endfor%}
+
+  function go_submit(){
+    window.location.href = '/problem/submit/'
+  }
+</script>
+<button onclick="go_submit();" type="submit">next</button>
+<script type="text/javascript" src="{% static 'js/soltree2.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select.js' %}"></script>
+{% endblock %}

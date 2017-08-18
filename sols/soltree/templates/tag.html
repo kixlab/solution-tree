@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block content %}
+  <div style="padding:10px">
+    <div>
+      <p>
+        Capture part of your solution which include key step for solving this problem
+      </p>
+      <div id="div-img" style="width:75%;float:left;">
+        <img style="max-width: 100%; height:auto" id='sol-img' src="{{img.url}}"></img>
+      </div>
+      <div style="width:2%;height:10px;float:left;"></div>
+      <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
+      <div id="sum-outer-div" style="width:20%;float:left;">
+        <p id="ee"> Summarization</p>
+        <div id="sum-box"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="{% static 'js/problem.js' %}"></script>
+    <script>
+        {% for key, value in data.items %}
+          if('{{key}}'.includes('sum'))
+            ask_summarization('{{value}}');
+        {%endfor%}
+    </script>
+  </div>
+  <div>
+    <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
+    <form id="formtag" method='POST'>
+      {% csrf_token %}
+    <button onclick="post_to_url()" type="submit">next</button>
+    </form>
+  </div>
+{% endblock %}

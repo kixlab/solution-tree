@@ -1,0 +1,63 @@
+.nodeExample1 {
+    padding: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #0088aa;
+    border: 1px solid #000;
+    width: 200px;
+    font-family: Tahoma;
+    font-size: 12px;
+    color: #ffffff;
+    height : 100px;
+}
+
+.prompt {
+  position : absolute;
+  padding : 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.addsum img {
+  position : absolute;
+  left : 50px;
+  width : 100px;
+  height : 100px;
+}
+
+input[type=checkbox]
+{
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(3); /* IE */
+  -moz-transform: scale(3); /* FF */
+  -webkit-transform: scale(3); /* Safari and Chrome */
+  -o-transform: scale(3); /* Opera */
+}
+
+input[type=text]
+{
+  font-size : 25px;
+}
+
+.collapse-switch
+{
+  display : none;
+}
+
+.selectable {
+  background-color : #0000ff;
+}
+
+.selected {
+  background-color : #00a0d6;
+}
+/*
+.selected.last {
+  background-color : #214cce;
+}*/
+
+.blur {
+  filter : blur(3px);
+}

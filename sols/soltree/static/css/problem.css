@@ -1,0 +1,45 @@
+#div-problem
+{
+  padding: 10px;
+  border-style: solid;
+}
+
+#div-solution
+{
+  padding:10px;
+}
+
+#div-submit
+{
+  padding:10px;
+  float:right;
+}
+
+#question-body
+{
+  font-size:30px;
+}
+
+canvas {
+  border: 1px solid #000000;
+}
+
+.rectangle {
+    border: 1px solid #FF0000;
+    position: absolute;
+    z-index: 1000;
+}
+
+#sol-img {
+}
+
+#sum-box {
+  margin-bottom: 10px;
+  width : 100%;
+  height : 250px;
+  border: 1px solid #0000aa;
+}
+
+#vert-line{
+  border-left:1px solid #000000;
+}
