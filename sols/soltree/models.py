@@ -5,7 +5,7 @@ class solution(models.Model):
     img = models.ImageField(upload_to='orig')
 
     def get_absolute_url(self):
-        url = reverse_lazy('check', kwargs={'pk': self.pk})
+        url = reverse_lazy('tag', kwargs={'pk': self.pk})
         return url
 
 class node(models.Model):

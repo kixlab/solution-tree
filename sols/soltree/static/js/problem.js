@@ -1,9 +1,12 @@
 var img = document.querySelector('img');
 
+
+var img_height = 0;
 img.addEventListener('load', function(){
-  $("#vert-line").height($("#sol-img").height()+1);
-  $("#sum-outer-div").height($("#sol-img").height()+5);
-  $("#sum-box").height($("#sol-img").height()-53);
+  $("#vert-line").height($("#div-img").height()+1);
+  $("#sum-outer-div").height($("#div-img").height()+5);
+  $("#sum-box").height($("#div-img").height()-53);
+  img_height = $('#div-outer-img').height();
 });
 
 function get_sum_num(){
@@ -155,4 +158,65 @@ function initDraw(canvas) {
         }
     }
 }
-initDraw(document.getElementById('div-img'));
+initDraw(document.getElementById('div-outer-img'));
+
+var rotate_cnt = 0;
+$("#span-rotate").on('click', function(){
+  rotate_cnt = (rotate_cnt+1)%4;
+  if(rotate_cnt==0)
+  {
+    $("#sol-img").css({
+      '-ms-transform': '', /* IE 9 */
+      '-webkit-transform': '', /* Chrome, Safari, Opera */
+      'transform': '',
+      'max-width': '100%',
+      'height':'auto'
+    });
+  }
+  else if(rotate_cnt==1)
+  {
+    $("#sol-img").css({
+      '-ms-transform': 'rotate(90deg) translate(0,-100%)', /* IE 9 */
+      '-webkit-transform': 'rotate(90deg) translate(0,-100%)', /* Chrome, Safari, Opera */
+      'transform': 'rotate(90deg), translate(0,-100%)',
+      '-webkit-transform-origin':'0px 0px',
+      '-moz-transform-origin':'0px 0px',
+      '-ms-transform-origin':'0px 0px',
+      'transform-origin':'0px 0px',
+      'max-width' : img_height
+    });
+  }
+  else if(rotate_cnt==2)
+  {
+    $("#sol-img").css({
+      '-ms-transform': 'rotate(180deg)', /* IE 9 */
+      '-webkit-transform': 'rotate(180deg)', /* Chrome, Safari, Opera */
+      'transform': 'rotate(180deg)',
+      '-webkit-transform-origin':'',
+      '-moz-transform-origin':'',
+      '-ms-transform-origin':'',
+      'transform-origin':'',
+      'max-width' : '100%'
+    });
+  }
+  else {
+    $("#sol-img").css({
+      '-ms-transform': 'rotate(270deg) translate(-100%,0)', /* IE 9 */
+      '-webkit-transform': 'rotate(270deg) translate(-100%,0)', /* Chrome, Safari, Opera */
+      'transform': 'rotate(270deg), translate(-100%,0)',
+      '-webkit-transform-origin':'0px 0px',
+      '-moz-transform-origin':'0px 0px',
+      '-ms-transform-origin':'0px 0px',
+      'transform-origin':'0px 0px',
+      'max-width' : img_height
+    });
+  }
+});
+$("#span-rotate").css({
+  '-webkit-touch-callout': 'none',
+  '-webkit-user-select': 'none',
+  '-khtml-user-select': 'none',
+  '-moz-user-select': 'none',
+  '-ms-user-select': 'none',
+  'user-select': 'none',
+});
