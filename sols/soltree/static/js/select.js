@@ -218,6 +218,7 @@ function create_third_prompt(){
   no_button.on("click",function (){
     $(this).parent().remove();
     $("#div-body").removeClass('blur');
+    $('.last').find("a")[0].click();
   });
 
   prompt_div.append(explanation_p);
@@ -300,7 +301,6 @@ $(".addsum").on('click', function(){
     }
   });
   done_button.on("click",function (){
-    $(".last").find("a")[0].click();
     $(this).parent().remove();
     $("#div-body").removeClass('blur');
   });
