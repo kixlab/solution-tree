@@ -104,7 +104,7 @@ def select(request, pk):
             'name' : 'Start',
         },
         'HTMLid' : 'node_'+str(root.pk),
-        'HTMLclass' : 'selectable',
+        'HTMLclass' : 'selectable root',
         'collapsed' : 'true'
     }
     tree_list = make_config(root_config, root.pk, True)

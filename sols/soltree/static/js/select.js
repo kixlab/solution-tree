@@ -326,3 +326,6 @@ $(".addsum").on('click', function(){
   $("body").append(prompt_div);
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 });
+$( document ).ready(function() {
+    $(".root").click();
+});
