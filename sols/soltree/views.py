@@ -53,7 +53,6 @@ def make_config(parent_config, parent_pk, only_img):
             'HTMLclass' : 'childnode',
             'text' : {
                 'name' : child.summarization,
-                'title' : "Matching step",
             },
             'HTMLid' : 'node_'+str(child.pk),
             'collapsed' : 'true'
@@ -104,7 +103,7 @@ def select(request, pk):
             'name' : 'Start',
         },
         'HTMLid' : 'node_'+str(root.pk),
-        'HTMLclass' : 'selectable',
+        'HTMLclass' : 'selectable root',
         'collapsed' : 'true'
     }
     tree_list = make_config(root_config, root.pk, True)

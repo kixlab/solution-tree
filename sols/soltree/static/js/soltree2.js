@@ -92,6 +92,8 @@ $(".nodeExample1").click(function(){
   }
   else if(this.className.includes("selected"))
   {
+    if(this.className.includes('root'))
+      return;
     //마지막일경우 selected 없애기, 부모에 last추가하기, 자식들 unselectable로 바꾸기
     if(this.className.includes("last"))
     {

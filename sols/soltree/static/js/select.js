@@ -1,233 +1,71 @@
 var checked = [];
 var picked_str = "";
 var refined_str = "";
+var choose_step = false;
+var choose_div_steps = null;
+
+$(".childnode").append($("<div>", {
+  "class": 'div-steps',
+  css : {
+  "padding-bottom" : '10px'
+  },
+}));
+$(".childnode").append($("<div>", {
+  'class' : 'div-btn',
+  'align' : 'right',
+}));
 
 $(".childnode").on("click", function(){
   if(!$(this).hasClass("last"))
     return;
-  $("#div-body").addClass('blur');
-  // div wrapping promopt
-  var prompt_div = $("<div>", {
-    css : {
-      position : 'absolute',
-      left : 0.05*window.innerWidth,
-      width : 0.9 * window.innerWidth,
-      backgroundColor : 'white',
-      border : '1px solid black'
-    },
-    class : 'prompt'
-  });
 
-  //showing currently picked step
-  var picked_div = $("<div>",{
+  choose_div_steps = $(this).find('.div-steps');
+  $(this).find('.div-steps').html("Matching step : nothing")
+  var btn_confirm = $("<input>", {
+    type : 'button',
+    value : 'confirm',
     css : {
-      'font-size' : '30px',
-    }
-  });
-  picked_div.html("You Picked<br>");
-  var picked_step = $("<span/>", {
-    class : "picked_step",
-    css :
-    {
-      'font-weight': 'bold',
-      'font-size' : '40px'
-    }
-  });
-  picked_step.html($(this).find('.node-name').html());
-  picked_str = $(this).find('.node-name').html();
-  picked_div.append(picked_step);
-  picked_div.append(`<br>Choose your summarization which does same thing.(Multiple is posssible)
-  <br>If there isn't appropriate summarazation, just click not matching`);
-  var checkbox_div = $("<div>", {
-    css : {
-      margin : '20px',
+      'padding' : '2px'
     },
+    width : '50px'
   });
+  $(this).find('.div-btn').append(btn_confirm);
+  choose_step = true;
 
-  for(var i = 0;i<sum_data.length;i++)
-  {
-    checkbox_div.append('<input type="checkbox" name="summarization" value="'+sum_data[i]+'"> <label style="font-size:35px;">'+sum_data[i]+'</label><br></input>');
-  }
-  checkbox_div.append('<input type="checkbox" name="summarization" value="not matching"> <label style="font-size:35px;">not matching</label><br></input>');
-  var next_button = $("<input>", {
-    type : 'button',
-    value : 'next',
-    css : {
-      margin : '5px',
-    }
-  });
-  next_button.on("click",function (){
-    //TODO view new things.
-    var checked_inp = $("input[type='checkbox']:checked");
-    checked = [];
-    for(var i=0;i<checked_inp.length;i++)
-    {
-      if(checked_inp[i].value=='not matching' && i!=0){
-        alert("Error : You choose 'not matching' with other summarization");
-        return;
-      }
-      if(checked_inp[i].value!='not matching')
-        checked.push(checked_inp[i].value);
-    }
-    $(this).parent().remove();
-    create_second_prompt();
-  });
-  var close_button = $("<input>", {
-    type : 'button',
-    value : 'close',
-    css : {
-      margin : '5px',
-    }
-  });
-  close_button.on("click",function (){
-    $("#div-body").removeClass('blur');
-    not_from_close = false;
-    $(".last").click();
-    $(this).parent().remove();
-  });
-  prompt_div.append(picked_div);
-  prompt_div.append(checkbox_div);
-  prompt_div.append(next_button);
-  prompt_div.append(close_button);
-  $("body").append(prompt_div);
-  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2 + 'px');
+  btn_confirm.on("click", function(e){
+    e.stopPropagation();
+    var btn_refine = $("<input>", {
+      type : 'button',
+      value : 'refine',
+      css : {
+        'padding' : '2px'
+      },
+      width : '50px'
+    });
+    $(".last").find('.div-btn').append(btn_refine);
+    $(".last").find('.collapse-switch').click();
+    $(this).remove();
+  })
 });
 
-function create_second_prompt(){
-  var prompt_div = $("<div>", {
-    css : {
-      position : 'absolute',
-      left : 0.05*window.innerWidth,
-      width : 0.9 * window.innerWidth,
-      backgroundColor : 'white',
-      border : '1px solid black'
-    },
-    class : 'prompt'
-  });
-  prompt_div.html('<span style="font-size : 30px">Do you want to refine current summarization?<br>');
-  var yes_button = $("<input>", {
-    type : 'button',
-    value : 'yes',
-    css : {
-      margin : '5px',
-    }
-  });
-  yes_button.on("click",function (){
-    $(this).parent().remove();
-    create_third_prompt();
-  });
-  var no_button = $("<input>", {
-    type : 'button',
-    value : 'no',
-    css : {
-      margin : '5px',
-    }
-  });
-  no_button.on("click",function (){
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
-    $('.last').find("a")[0].click();
-  });
-  prompt_div.append(yes_button);
-  prompt_div.append(no_button);
-  $("body").append(prompt_div);
-  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
-}
+$(".subsum").on("click", function(){
+  if(choose_step)
+  {
+    $(this).toggleClass('sum-selected');
 
-function create_third_prompt(){
-  var prompt_div = $("<div>", {
-    css : {
-      position : 'absolute',
-      left : 0.05*window.innerWidth,
-      width : 0.9 * window.innerWidth,
-      backgroundColor : 'white',
-      border : '1px solid black'
-    },
-    class : 'prompt'
-  });
-  var explanation_p = $("<p style='font-size:30px'>");
-  explanation_p.html('Choose the best summarization you think, it\'s possible to refine it');
-  var radio_div = $("<div>");
-  var rad1 = $("<input>", {
-    type : 'radio',
-    value : 1,
-    name : 'refining'
-  });
-  var text1 = $("<span>", {
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text1'
-  });
-  text1.html(picked_str + "<br>");
-  var rad2= $("<input>", {
-    type : 'radio',
-    value : 2,
-    name : 'refining'
-  });
-  var text2 = $("<span>", {
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text2'
-  });
-  text2.html(checked.join(", "));
-  text2.append("<br>");
-  var rad3 = $("<input>", {
-    type : 'radio',
-    value : 3,
-    name : 'refining'
-  });
-  var text3 = $("<input>", {
-    type : 'text',
-    width : '80%',
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text3'
-  });
-  text3.val(checked.join(", "));
-  radio_div.append(rad1);
-  radio_div.append(text1);
-  radio_div.append(rad2);
-  radio_div.append(text2);
-  radio_div.append(rad3);
-  radio_div.append(text3);
-  var done_button = $("<input>", {
-    type : 'button',
-    value : 'done',
-    css : {
-      margin : '5px',
+    var selected_steps = $('.sum-selected');
+    if(selected_steps.length==0)
+    {
+      choose_div_steps.html("Matching step : nothing");
     }
-  });
-  done_button.on("click",function (){
-    var index = $('input[name=refining]:checked').val();
-    refined_str = $("#text"+index).val() || $("#text"+index).html();
-    $('.last').find('.node-name').html(refined_str);
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
-    $('.last').find("a")[0].click();
-  });
-  var no_button = $("<input>", {
-    type : 'button',
-    value : 'no',
-    css : {
-      margin : '5px',
+    else {
+      choose_div_steps.html("Matching step : ");
+      selected_steps.each(function(){
+        choose_div_steps.append($(this).find('.div_num').html());
+      });
     }
-  });
-  no_button.on("click",function (){
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
-    $('.last').find("a")[0].click();
-  });
-
-  prompt_div.append(explanation_p);
-  prompt_div.append(radio_div);
-  prompt_div.append(done_button);
-  prompt_div.append(no_button);
-  $("body").append(prompt_div);
-  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
-}
+  }
+})
 
 
 $(".addsum").on('click', function(){
@@ -325,4 +163,8 @@ $(".addsum").on('click', function(){
   prompt_div.append(close_button);
   $("body").append(prompt_div);
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
+});
+
+$( document ).ready(function() {
+    $(".root").click();
 });
