@@ -81,6 +81,8 @@ function ask_summarization(sum, box, step_div) {
   div_tot.append(p_sum);
 };
 
+var element = null;
+
 function initDraw(canvas) {
     var mouse = {
         x: 0,
@@ -99,7 +101,6 @@ function initDraw(canvas) {
         }
     };
 
-    var element = null;
     canvas.onmousemove = function (e) {
         setMousePosition(e);
         if (element !== null) {
@@ -109,54 +110,63 @@ function initDraw(canvas) {
             element.style.top = (mouse.y - mouse.startY < 0) ? mouse.y + 'px' : mouse.startY + 'px';
         }
     }
-
-    canvas.onclick = function (e) {
-        console.log("click!");
-        if (element != null) {
-            canvas.style.cursor = "default";
-            var sum = prompt(
-              `Your summarization Should be
-               - Key step for solving this problem
-               - not specific, be high-level abstract
-              `
-            );
-            if(sum == null)
-            {
-              element.parentNode.removeChild(element);
-              element = null;
-              return;
-            }
-            var minX = Math.min(mouse.startX, mouse.x);
-            var minY = Math.min(mouse.startY, mouse.y);
-            var step_div = $('<div>', {
-              css :
-              {
-                position : 'absolute',
-                left : minX,
-                top : minY - 30,
-                color : 'white'
-              },
-              class : 'step_div'
-            })
-            step_div.html("Step "+ (get_sum_num()+1));
-            $('body').append(step_div);
-
-            ask_summarization(sum, element, step_div);
-            element = null;
-            console.log("finsihed.");
-        } else {
-            console.log("begun-1.");
-            mouse.startX = mouse.x;
-            mouse.startY = mouse.y;
-            element = document.createElement('div');
-            element.className = 'rectangle'
-            element.style.left = mouse.x + 'px';
-            element.style.top = mouse.y + 'px';
-            canvas.append(element)
-            canvas.style.cursor = "crosshair";
-            console.log("begun-2.");
-        }
+    canvas.onmousedown = function(e)
+    {
+      mouse.startX = mouse.x;
+      mouse.startY = mouse.y;
+      element = document.createElement('div');
+      element.className = 'rectangle'
+      element.style.left = mouse.x + 'px';
+      element.style.top = mouse.y + 'px';
+      canvas.append(element)
+      canvas.style.cursor = "crosshair";
     }
+
+    canvas.onmouseup = function(e)
+    {
+      if (element != null) {
+          canvas.style.cursor = "default";
+          var sum = prompt(
+            `Your summarization Should be
+             - Key step for solving this problem
+             - not specific, be high-level abstract
+            `
+          );
+          if(sum == null)
+          {
+            element.parentNode.removeChild(element);
+            element = null;
+            return;
+          }
+          var minX = Math.min(mouse.startX, mouse.x);
+          var minY = Math.min(mouse.startY, mouse.y);
+          var step_div = $('<div>', {
+            css :
+            {
+              position : 'absolute',
+              left : minX,
+              top : minY - 30,
+              color : 'white'
+            },
+            class : 'step_div'
+          })
+          step_div.html("Step "+ (get_sum_num()+1));
+          $('body').append(step_div);
+
+          ask_summarization(sum, element, step_div);
+          element = null;
+          console.log("finsihed.");
+      }
+    }
+}
+
+document.body.onmouseup = function(e){
+  if(element)
+  {
+    element.parentNode.removeChild(element);
+    element = null;
+  }
+  console.log("body mouse up");
 }
 initDraw(document.getElementById('div-outer-img'));
 
