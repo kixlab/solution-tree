@@ -102,6 +102,7 @@ $(".nodeExample1").click(function(){
       if(not_from_close)
         $(this).find("a")[0].click();
       not_from_close = true;
+      $(this).find('.div-btn').html("");
       this.className = this.className.replace("selected last", "selectable");
       var brother_divs = get_brother_divs_by_pk(cur_pk);
       for(var i=0;i<brother_divs.length;i++)

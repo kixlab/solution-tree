@@ -1,5 +1,4 @@
 var checked = [];
-var picked_str = "";
 var refined_str = "";
 var choose_step = false;
 var choose_div_steps = null;
@@ -43,7 +42,15 @@ $(".childnode").on("click", function(){
       width : '50px'
     });
     $(".last").find('.div-btn').append(btn_refine);
+    $('.sum-selected').removeClass('sum-selected');
+    btn_refine.on('click', function(e){
+      e.stopPropagation();
+      var nn = $(this).parent().parent().find('.node-name').html();
+      create_third_prompt(nn, $(this).parent().parent());
+    });
     $(".last").find('.collapse-switch').click();
+    choose_div_steps = null;
+    choose_step = false;
     $(this).remove();
   })
 });
@@ -60,13 +67,106 @@ $(".subsum").on("click", function(){
     }
     else {
       choose_div_steps.html("Matching step : ");
+      checked = []
       selected_steps.each(function(){
         choose_div_steps.append($(this).find('.div_num').html());
+        checked.push($(this).find(".p_sum").html().replace("<br>",""));
       });
     }
   }
 })
+function create_third_prompt(picked_str, node){
+  var prompt_div = $("<div>", {
+    css : {
+      position : 'absolute',
+      left : 0.05*window.innerWidth,
+      width : 0.9 * window.innerWidth,
+      backgroundColor : 'white',
+      border : '1px solid black'
+    },
+    class : 'prompt'
+  });
+  var explanation_p = $("<p style='font-size:30px'>");
+  explanation_p.html('Choose the best summarization you think, it\'s possible to refine it');
+  var radio_div = $("<div>");
+  var rad1 = $("<input>", {
+    type : 'radio',
+    value : 1,
+    name : 'refining'
+  });
+  var text1 = $("<span>", {
+    css : {
+      'font-size' : '25px'
+    },
+    id : 'text1'
+  });
+  text1.html(picked_str + "<br>");
+  var rad2= $("<input>", {
+    type : 'radio',
+    value : 2,
+    name : 'refining'
+  });
+  var text2 = $("<span>", {
+    css : {
+      'font-size' : '25px'
+    },
+    id : 'text2'
+  });
+  text2.html(checked.join(", "));
+  text2.append("<br>");
+  var rad3 = $("<input>", {
+    type : 'radio',
+    value : 3,
+    name : 'refining'
+  });
+  var text3 = $("<input>", {
+    type : 'text',
+    width : '80%',
+    css : {
+      'font-size' : '25px'
+    },
+    id : 'text3'
+  });
+  text3.val(checked.join(", "));
+  radio_div.append(rad1);
+  radio_div.append(text1);
+  radio_div.append(rad2);
+  radio_div.append(text2);
+  radio_div.append(rad3);
+  radio_div.append(text3);
+  var done_button = $("<input>", {
+    type : 'button',
+    value : 'done',
+    css : {
+      margin : '5px',
+    }
+  });
+  done_button.on("click",function (){
+    var index = $('input[name=refining]:checked').val();
+    refined_str = $("#text"+index).val() || $("#text"+index).html();
+    node.find(".node-name").html(refined_str);
+    $(this).parent().remove();
+    $("#div-body").removeClass('blur');
+  });
+  var no_button = $("<input>", {
+    type : 'button',
+    value : 'no',
+    css : {
+      margin : '5px',
+    }
+  });
+  no_button.on("click",function (){
+    $(this).parent().remove();
+    $("#div-body").removeClass('blur');
+  });
 
+  prompt_div.append(explanation_p);
+  prompt_div.append(radio_div);
+  prompt_div.append(done_button);
+  prompt_div.append(no_button);
+  $("body").append(prompt_div);
+  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
+}
 
 $(".addsum").on('click', function(){
   if(!$(this).hasClass("last"))
