@@ -4,6 +4,11 @@ function get_div_by_pk(pk)
   return $("#"+node_id);
 }
 
+function get_pk_from_div(div)
+{
+  return parseInt(div.attr("id").replace("node_",""));
+}
+
 function get_parent_pk(pk)
 {
   for(var i=1;i<chart_config.length;i++)
@@ -69,57 +74,37 @@ function get_child_divs_by_pk(pk)
   return child_divs;
 }
 
-var not_from_close = true;
-
-$(".nodeExample1").click(function(){
-  var cur_pk = parseInt(this.id.replace("node_",""));
-  var parent_div = get_parent_div_by_pk(cur_pk);
-  if(this.className.includes("selectable"))
-  {
-    $(".selectable").removeClass("selectable");
-    this.className += " selected last";
-    if(parent_div!=undefined)
-      parent_div.removeClass("last");
-    else {
-      $(this).find("a")[0].click();
-    }
-    var child_divs = get_child_divs_by_pk(cur_pk);
-    for(var i=0;i<child_divs.length;i++)
+function give_token(cur_div, propagate)
+{
+  if(cur_div==null)
+    return;
+  if(cur_div.attr('token')=='yes')
+    return;
+  else {
+    var cur_pk = get_pk_from_div(cur_div);
+    cur_div.attr('token', 'yes');
+    if(propagate == 0)
     {
-      child_divs[i].addClass("selectable");
-    }
-    //child div에 selectable 추가 같은 depth에 있는 애들도 selectable없애기
-  }
-  else if(this.className.includes("selected"))
-  {
-    if(this.className.includes('root'))
-      return;
-    //마지막일경우 selected 없애기, 부모에 last추가하기, 자식들 unselectable로 바꾸기
-    if(this.className.includes("last"))
-    {
-      if(parent_div!=undefined)
-        parent_div.addClass("last");
-      if(not_from_close)
-        $(this).find("a")[0].click();
-      not_from_close = true;
-      $(this).find('.div-btn').html("");
-      this.className = this.className.replace("selected last", "selectable");
-      var brother_divs = get_brother_divs_by_pk(cur_pk);
-      for(var i=0;i<brother_divs.length;i++)
-      {
-        brother_divs[i].addClass('selectable');
-      }
+      give_token(get_parent_div_by_pk(cur_pk),1);
       var child_divs = get_child_divs_by_pk(cur_pk);
       for(var i=0;i<child_divs.length;i++)
       {
-        child_divs[i].removeClass("selectable");
+        give_token(child_divs[i], 2);
+      }
+    }
+    else if(propagate ==1)
+    {
+      give_token(get_parent_div_by_pk(cur_pk),1);
+    }
+    else if(propagate ==2)
+    {
+      var child_divs = get_child_divs_by_pk(cur_pk);
+      for(var i=0;i<child_divs.length;i++)
+      {
+        give_token(child_divs[i], 2);
       }
     }
   }
-})
+}
 
-$(document).ready(function(){
-   $(".node a").click(function(e) {
-        e.stopPropagation();
-   });
-});
+var not_from_close = true;

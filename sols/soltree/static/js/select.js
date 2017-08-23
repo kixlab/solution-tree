@@ -1,7 +1,8 @@
 var checked = [];
 var refined_str = "";
-var choose_step = false;
-var choose_div_steps = null;
+var is_picking = null;
+var deepest_div = null;
+var deepest_div_pk = 0;
 
 $(".childnode").append($("<div>", {
   "class": 'div-steps',
@@ -9,72 +10,87 @@ $(".childnode").append($("<div>", {
   "padding-bottom" : '10px'
   },
 }));
-$(".childnode").append($("<div>", {
+
+$(".subsum").append($("<div>", {
   'class' : 'div-btn',
   'align' : 'right',
 }));
 
 $(".childnode").on("click", function(){
-  if(!$(this).hasClass("last"))
+  if(!is_picking)
     return;
+  if(!$(this).hasClass('selectable'))
+    return;
+  if($(this).find('.div-steps').html().includes(is_picking))
+  {
+    $(this).removeClass("selected");
+    var temp_div = $(this).find('.div-steps')
+    temp_div.html(temp_div.html().replace(is_picking, ""));
+  }
+  else {
+    $(this).addClass("selected");
+    $(this).find('.div-steps').append(is_picking);
+  }
 
-  choose_div_steps = $(this).find('.div-steps');
-  $(this).find('.div-steps').html("Matching step : nothing")
+  $(".childnode").each(function(){
+    if($(this).find(".div-steps").html())
+    {
+      var cur_pk = get_pk_from_div($(this));
+      if(deepest_div_pk<cur_pk){
+        deepest_div_pk = cur_pk;
+        deepest_div = $(this);
+      }
+    }
+  });
+  give_token(deepest_div, 0);
+  $(".childnode").removeClass("selectable");
+  $(".childnode[token='yes']").addClass("selectable");
+  if(deepest_div == null)
+    $(".childnode").addClass("selectable");
+  $(".childnode").attr('token', '');
+});
+
+$(".subsum").on("click", function(){
+  if($(this).hasClass('sum-selected') || is_picking)
+    return;
+  $(this).addClass('sum-selected');
   var btn_confirm = $("<input>", {
     type : 'button',
     value : 'confirm',
     css : {
-      'padding' : '2px'
+      'margin' : '4px'
     },
-    width : '50px'
+    width : '55px'
   });
-  $(this).find('.div-btn').append(btn_confirm);
-  choose_step = true;
-
-  btn_confirm.on("click", function(e){
-    e.stopPropagation();
-    var btn_refine = $("<input>", {
-      type : 'button',
-      value : 'refine',
-      css : {
-        'padding' : '2px'
-      },
-      width : '50px'
-    });
-    $(".last").find('.div-btn').append(btn_refine);
-    $('.sum-selected').removeClass('sum-selected');
-    btn_refine.on('click', function(e){
-      e.stopPropagation();
-      var nn = $(this).parent().parent().find('.node-name').html();
-      create_third_prompt(nn, $(this).parent().parent());
-    });
-    $(".last").find('.collapse-switch').click();
-    choose_div_steps = null;
-    choose_step = false;
-    $(this).remove();
+  var btn_fix = $("<input>", {
+    type : 'button',
+    value : 'fix',
+    css : {
+      'margin' : '4px',
+      'display' : 'none'
+    },
+    width : '55px'
+  });
+  btn_confirm.on("click", function(){
+    $(".selected").removeClass('selected');
+    is_picking = null;
+    $(this).hide();
+    $(this).parent().find('input[value="fix"]').show();
   })
-});
-
-$(".subsum").on("click", function(){
-  if(choose_step)
-  {
-    $(this).toggleClass('sum-selected');
-
-    var selected_steps = $('.sum-selected');
-    if(selected_steps.length==0)
-    {
-      choose_div_steps.html("Matching step : nothing");
-    }
-    else {
-      choose_div_steps.html("Matching step : ");
-      checked = []
-      selected_steps.each(function(){
-        choose_div_steps.append($(this).find('.div_num').html());
-        checked.push($(this).find(".p_sum").html().replace("<br>",""));
-      });
-    }
-  }
+  btn_fix.on("click", function(){
+    is_picking = $(this).parent().parent().find(".div_num").html();
+    $(".childnode").each(function(){
+      if($(this).find('.div-steps').html().includes(is_picking))
+        $(this).addClass("selected");
+    })
+    $(this).hide();
+    $(this).parent().find('input[value="confirm"]').show();
+  })
+  $(this).find('.div-btn').append(btn_confirm);
+  $(this).find('.div-btn').append(btn_fix);
+  is_picking = $(this).find(".div_num").html();
 })
+
 function create_third_prompt(picked_str, node){
   var prompt_div = $("<div>", {
     css : {
@@ -168,9 +184,7 @@ function create_third_prompt(picked_str, node){
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 }
 
-$(".addsum").on('click', function(){
-  if(!$(this).hasClass("last"))
-    return;
+$(".add_sol").on('click', function(){
   $("#div-body").addClass('blur');
   var prompt_div = $("<div>", {
     css : {
@@ -194,13 +208,21 @@ $(".addsum").on('click', function(){
       'font-size' : '25px',
     }
   });
-  $('.childnode.selected').each(function(index){
+  temp_div = deepest_div;
+  while(temp_div!=null)
+  {
+    if(temp_div.hasClass('root'))
+      break;
     var temp_p = $("<p>", {
       class : 'step_p'
     });
-    temp_p.html("Step "+ (index+1) + " : " + $(this).find('.node-name').html());
-    div_picked_item.append(temp_p);
-  });
+    temp_p.html(temp_div.find('.node-name').html());
+    // temp_p.html("Step "+ (index+1) + " : " + $(this).find('.node-name').html());
+    div_picked_item.prepend(temp_p);
+    temp_pk = get_pk_from_div(temp_div);
+    temp_div = get_parent_div_by_pk(temp_pk);
+  }
+
   var div_add = $("<div>");
   var add_img = $("<img>",{
     src : '/assets/img/plus.png',
@@ -262,6 +284,9 @@ $(".addsum").on('click', function(){
   prompt_div.append(done_button);
   prompt_div.append(close_button);
   $("body").append(prompt_div);
+  $(".step_p").each(function(index){
+    $(this).prepend("Step "+ (index+1) + " : " );
+  });
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 });
 

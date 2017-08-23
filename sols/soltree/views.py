@@ -50,25 +50,14 @@ def make_config(parent_config, parent_pk, only_img):
             'parent_pk' : parent_pk,
             'pk' : child.pk,
             'parent' : parent_config,
-            'HTMLclass' : 'childnode',
+            'HTMLclass' : 'childnode selectable',
             'text' : {
                 'name' : child.summarization,
             },
             'HTMLid' : 'node_'+str(child.pk),
-            'collapsed' : 'true'
         }
         ret_list.extend(make_config(child_config, child.pk, check))
-    if check :
-        add_config = {
-            'pk' : parent_pk * 100,
-            'parent_pk' : parent_pk,
-            'parent' : parent_config,
-            'HTMLclass' : 'addsum',
-            'image' : '/assets/img/plus.png',
-            'HTMLid' : 'node_'+str(parent_pk*100),
-            'collapsed' : 'true'
-        }
-    else :
+    if not check :
         add_config = {
             'parent_pk' : parent_pk,
             'parent' : parent_config,
@@ -78,7 +67,7 @@ def make_config(parent_config, parent_pk, only_img):
                 'name' : ' Make new step',
             },
         }
-    ret_list.append(add_config)
+        ret_list.append(add_config)
     return ret_list
 
 def select(request, pk):
@@ -92,7 +81,6 @@ def select(request, pk):
         },
         'node' : {
             'HTMLclass' : 'nodeExample1',
-            'collapsable' : 'true',
         },
     }
     chart_config = [config]
@@ -103,8 +91,7 @@ def select(request, pk):
             'name' : 'Start',
         },
         'HTMLid' : 'node_'+str(root.pk),
-        'HTMLclass' : 'selectable root',
-        'collapsed' : 'true'
+        'HTMLclass' : 'root',
     }
     tree_list = make_config(root_config, root.pk, True)
     chart_config.extend(tree_list)

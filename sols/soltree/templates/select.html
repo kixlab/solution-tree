@@ -3,15 +3,17 @@
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
   <link rel="stylesheet" href="{% static 'css/select.css' %}">
-  <p>1. Choose matching step in existing tree. If matching step isn't existed, select + area</p>
-  <p>2. Choose your summarization(multiple choice is possible)</p>
-  <p>3. If you think summarization is weird, you can fix with your solution or just typing it</p>
+  <p>1. Choose your summarization(multiple choice is possible)</p>
+  <p>2. Choose similar step in existing tree.(multiple or no choice is possible)</p>
+  <p>3. If you think summarization is weird, you can fix it by clicking</p>
+  <p>p.s. If your solution doesn't exist in current tree, <span class='add_sol' style="color : blue; text-decoration : underline;cursor : pointer;">click this</span></p>
   <div id="sum-outer-div" style="width:20%;float:left;">
     <p id="ee"> Your Summarization</p>
     <div id="sum-box"></div>
   </div>
   <div style="width:2%;height:10px;float:left;"></div>
   <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
+  <p class='add_sol' style="text-align:right;color : blue; text-decoration : underline;cursor : pointer;">Add new solution</p>
   <div id="div-soltree" style="width:75%"></div>
 <script type="text/javascript" src = "{% static 'js/raphael.js' %}"></script>
 <script type="text/javascript" src = "{% static 'js/Treant.js' %}"></script>
@@ -29,9 +31,9 @@
   {%endfor%}
   $("#vert-line").height(sum_data.length*100+138);
   $("#sum-outer-div").height(sum_data.length*100+130);
-  $("#sum-box").height(sum_data.length*100+90);
+  $("#sum-box").height(sum_data.length*100+80);
   $("#btn").css({
-    top : (sum_data.length*100 + 500)+'px',
+    top : (sum_data.length*100 + 550)+'px',
     left : '20px'
   })
   var tree = new Treant(chart_config, null , $);
@@ -45,6 +47,6 @@
 </script>
 <p></p>
 
-<script type="text/javascript" src="{% static 'js/soltree2.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/select.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/soltree2.js' %}"></script>
 {% endblock %}
