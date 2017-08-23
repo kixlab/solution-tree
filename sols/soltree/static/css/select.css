@@ -59,7 +59,7 @@ input[type=text]
 }*/
 
 .blur {
-  filter : blur(1px);
+  filter : blur(3px);
 }
 
 .sum-selected {

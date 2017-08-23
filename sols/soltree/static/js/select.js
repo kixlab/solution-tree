@@ -201,7 +201,7 @@ $(".add_sol").on('click', function(){
       'font-size' : '30px'
     }
   });
-  p_explanation.html("You're trying to create new solution branch!");
+  p_explanation.html("You're trying to add new solution branch!");
 
   var div_picked_item = $("<div>", {
     css : {
@@ -216,8 +216,34 @@ $(".add_sol").on('click', function(){
     var temp_p = $("<p>", {
       class : 'step_p'
     });
-    temp_p.html(temp_div.find('.node-name').html());
-    // temp_p.html("Step "+ (index+1) + " : " + $(this).find('.node-name').html());
+    var content_div = $("<div>", {
+      class : 'content_div',
+      css : {
+        'float' : 'left',
+      }
+    });
+    var del_div = $("<div>", {
+      class : 'del_div',
+      css : {
+        'text-align' : 'right',
+        'width' : '100%',
+      }
+    });
+    var del_span = $("<span>", {
+      css : {
+        'cursor' : 'pointer hand',
+      }
+    });
+    del_span.html("X");
+    del_span.on("click", function(){
+      // TODO index update
+      $(this).parent().parent().remove();
+    })
+    content_div.append(temp_div.find('.node-name').html());
+    del_div.append(del_span);
+
+    temp_p.append(content_div);
+    temp_p.append(del_div);
     div_picked_item.prepend(temp_p);
     temp_pk = get_pk_from_div(temp_div);
     temp_div = get_parent_div_by_pk(temp_pk);
@@ -285,7 +311,7 @@ $(".add_sol").on('click', function(){
   prompt_div.append(close_button);
   $("body").append(prompt_div);
   $(".step_p").each(function(index){
-    $(this).prepend("Step "+ (index+1) + " : " );
+    $(this).find(".content_div").prepend("Step "+ (index+1) + " : " );
   });
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 });
