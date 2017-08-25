@@ -214,10 +214,17 @@ $(".add_sol").on('click', function(){
     if(temp_div.hasClass('root'))
       break;
     var temp_p = $("<p>", {
-      class : 'step_p'
+      class : 'line_p'
+    });
+    var step_p = $("<span>", {
+      class : 'step_p',
+      css : {
+        'float' : 'left',
+      }
     });
     var content_div = $("<div>", {
       class : 'content_div',
+      pk : parseInt(temp_div.attr("id").replace("node_","")),
       css : {
         'float' : 'left',
       }
@@ -229,19 +236,39 @@ $(".add_sol").on('click', function(){
         'width' : '100%',
       }
     });
-    var del_span = $("<span>", {
+    var edit_img = $("<img>", {
       css : {
         'cursor' : 'pointer hand',
-      }
+        'width' : '30px',
+        'height' : '30px'
+      },
+      src : "/assets/img/edit_icon.png"
+    })
+    var del_img = $("<img>", {
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '25px',
+        'height' : '25px'
+      },
+      src : "/assets/img/x_icon.png"
     });
-    del_span.html("X");
-    del_span.on("click", function(){
+    // del_span.html("X");
+    edit_img.on("click", function(){
+      var text_input = $("<input>", {
+        type : 'text',
+        width : '500px',
+        placeholder : $(this).parent().parent().find(".content_div").html()
+      });
+      $(this).parent().parent().find(".content_div").html(text_input);
+    })
+    del_img.on("click", function(){
       // TODO index update
       $(this).parent().parent().remove();
-    })
+    });
     content_div.append(temp_div.find('.node-name').html());
-    del_div.append(del_span);
-
+    del_div.append(edit_img)
+    del_div.append(del_img);
+    temp_p.append(step_p);
     temp_p.append(content_div);
     temp_p.append(del_div);
     div_picked_item.prepend(temp_p);
@@ -272,6 +299,7 @@ $(".add_sol").on('click', function(){
       class : 'step_p'
     });
     var text_input = $("<input>", {
+      class : 'new_node',
       type : 'text',
       width : '80%',
     })
@@ -287,6 +315,7 @@ $(".add_sol").on('click', function(){
     }
   });
   done_button.on("click",function (){
+    make_new_chart_config();
     $(this).parent().remove();
     $("#div-body").removeClass('blur');
   });
@@ -311,10 +340,77 @@ $(".add_sol").on('click', function(){
   prompt_div.append(close_button);
   $("body").append(prompt_div);
   $(".step_p").each(function(index){
-    $(this).find(".content_div").prepend("Step "+ (index+1) + " : " );
+    $(this).append("Step "+ (index+1) + " :&nbsp;" );
   });
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 });
+
+jQuery.fn.reverse = [].reverse;
+var new_chart_config = chart_config;
+var parent_key = 2;
+function make_new_chart_config(){
+  new_chart_config = jQuery.extend([], chart_config);
+  var last_pk = parseInt($(".content_div").last().attr('pk'));
+  var child_config = null;
+  if($(".new_node").length == 0)
+  {
+    return;
+  }
+  $(".new_node").reverse().each(function(){
+    var temp_config = {
+      HTMLclass : 'childnode selectable new',
+      text : {
+        name : $(this).val(),
+      },
+      children : [],
+    };
+    if(child_config)
+    {
+      temp_config['children'].push(child_config);
+      child_config['new_parent'] = temp_config;
+    }
+    new_chart_config.push(temp_config);
+    child_config = temp_config;
+  });
+  if($(".content_div").length==0)
+  {
+    new_chart_config[1]['children'].push(child_config);
+    child_config['new_parent'] = new_chart_config[1];
+  }
+  else{
+    for(i=0;i<chart_config.length;i++)
+    {
+      if(new_chart_config[i]['pk']==last_pk)
+      {
+        new_chart_config[i]['children'].push(child_config);
+        child_config['new_parent'] = new_chart_config[i];
+      }
+    }
+  }
+  var tree = new Treant(new_chart_config, null, $);
+  return 0;
+}
+function go_submit(method){
+  var path = '/problem/submit/';
+  method = method || "post";
+  params = {
+    parent_key : parent_key,
+  };
+  for(var i=0;i<new_chart_config.length - chart_config.length;i++)
+  {
+    params[i+''] = new_chart_config[chart_config.length+i]['text']['name'];
+  }
+  var form = document.getElementById("formtag");
+  form.setAttribute("action", path);
+  for(var key in params){
+    var hiddenField = document.createElement("input");
+    hiddenField.setAttribute("type", "hidden");
+    hiddenField.setAttribute("name", key);
+    hiddenField.setAttribute("value", params[key]);
+    form.appendChild(hiddenField);
+  }
+}
+
 
 $( document ).ready(function() {
     $(".root").click();

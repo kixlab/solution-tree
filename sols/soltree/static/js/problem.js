@@ -127,10 +127,11 @@ function initDraw(canvas) {
       if (element != null) {
           canvas.style.cursor = "default";
           var sum = prompt(
-            `Your summarization Should be
-             - Key step for solving this problem
-             - not specific, be high-level abstract
-            `
+    `Your summarization Should be
+     - Start with verb
+     - Key step of your solution
+     - not specific, be high-level abstract
+    `
           );
           if(sum == null)
           {

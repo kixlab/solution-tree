@@ -14,6 +14,7 @@
   <div style="width:2%;height:10px;float:left;"></div>
   <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
   <p class='add_sol' style="text-align:right;color : blue; text-decoration : underline;cursor : pointer;">Add new solution</p>
+  <h3 style="text-align:center;">Ohters' solution summarization</h3>
   <div id="div-soltree" style="width:75%"></div>
 <script type="text/javascript" src = "{% static 'js/raphael.js' %}"></script>
 <script type="text/javascript" src = "{% static 'js/Treant.js' %}"></script>
@@ -22,16 +23,20 @@
 </script>
 <script type="text/javascript" src="{% static 'js/soltree.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/match1.js' %}"></script>
+<form id="formtag" method='POST'>
+  {% csrf_token %}
 <button id="btn" style="position:absolute"onclick="go_submit();" type="submit">next</button>
+</form>
+
 <script>
   var sum_data = [];
   {% for key, value in data.items %}
     if('{{key}}'.includes('sum'))
       sum_data.push('{{value}}');
   {%endfor%}
-  $("#vert-line").height(sum_data.length*100+138);
-  $("#sum-outer-div").height(sum_data.length*100+130);
-  $("#sum-box").height(sum_data.length*100+80);
+  $("#vert-line").height((sum_data.length*100+138)+'px');
+  $("#sum-outer-div").height((sum_data.length*100+130)+'px');
+  $("#sum-box").height((sum_data.length*100+80)+'px');
   $("#btn").css({
     top : (sum_data.length*100 + 550)+'px',
     left : '20px'
@@ -41,9 +46,6 @@
     if('{{key}}'.includes('sum'))
       ask_summarization('{{value}}');
   {%endfor%}
-  function go_submit(){
-    window.location.href = '/problem/submit/'
-  }
 </script>
 <p></p>
 
