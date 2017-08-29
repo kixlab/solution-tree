@@ -11,7 +11,7 @@ So, currently popular problem types are short answer question, multiple choice q
 Some research develop tools help instructor to give feedbacks.(GradeScope[1], Overcode[2]) <br>
 Some research ask learner to create evaluation or hint(peerstudio[3], [4])<br>
 
-###Approach
+### Approach
 
 Two goals
 - How about gathering similar problem for giving feedback or hint to each other?
@@ -24,7 +24,7 @@ To gather similar problem
 
 
 
-###Setting
+### Setting
 Django version : 1.11.3
 Python version : 3.6.2
 Database : SQLite
