@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from soltree.views import solve, check, tag, match, select, submit
+from soltree.views import solve, check, tag, select, submit
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,7 +24,6 @@ urlpatterns = [
     url(r'^problem/solve/$', solve),
     url(r'^problem/check/(?P<pk>[0-9]+)/$', check, name="check"),
     url(r'^problem/tag/(?P<pk>[0-9]+)/$', tag, name="tag"),
-    url(r'^problem/match/(?P<pk>[0-9]+)/$', match, name="match"),
     url(r'^problem/select/(?P<pk>[0-9]+)/$', select, name='select'),
     url(r'^problem/submit/$', submit, name='submit'),
 ]

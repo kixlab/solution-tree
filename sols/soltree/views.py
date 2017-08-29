@@ -97,33 +97,6 @@ def select(request, pk):
     chart_config.extend(tree_list)
     return render(request, 'select.html', {'chart_config':chart_config, 'data' : data_dict})
 
-def match(request, pk):
-    # if request.method!='POST':
-    #     return HttpResponse("no summarization data error!")
-    data_dict = {}
-    for key,value in request.POST.items():
-        data_dict[key]  = value
-    config = {
-        'container' : "#div-soltree",
-        'connectors' : {
-            'type' : 'step'
-        },
-        'node' : {
-            'HTMLclass' : 'nodeExample1',
-        },
-    }
-    chart_config = [config]
-    root = node.objects.get(parentId=None)
-    root_config = {
-        'pk' : root.pk,
-        'text' : {
-            'title' : "Start"
-        },
-        'HTMLid' : 'node_'+str(root.pk),
-    }
-    tree_list = make_config(root_config, root.pk, False)
-    chart_config.extend(tree_list)
-    return render(request, 'match.html', {'chart_config':chart_config, 'data' : data_dict})
 
 def submit(request):
     for key,value in request.POST.items():
