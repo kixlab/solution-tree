@@ -9,7 +9,7 @@ Nowaday, there are lots of people using online learning. However, in online educ
 It means, unlike classroom lecture, instructor cannot manually give feedback but need systematical help. <br>
 So, currently popular problem types are short answer question, multiple choice question. Which are easily automatically graded. <br>
 Some research develop tools help instructor to give feedbacks.(GradeScope[1], Overcode[2]) <br>
-Some research ask learner to create evaluation or hint(peerstudio[3], [4])<br>
+Some research ask learner to create evaluation or hint(peerstudio[3], [4]) <br>
 
 ### Approach
 
@@ -25,9 +25,9 @@ To gather similar problem
 
 
 ### Setting
-Django version : 1.11.3
-Python version : 3.6.2
-Database : SQLite
+Django version : 1.11.3 <br>
+Python version : 3.6.2 <br>
+Database : SQLite <br>
 Tree rendering : <a href="http://fperucic.github.io/treant-js/">Treant.api</a>
 
 <sub><sup>
