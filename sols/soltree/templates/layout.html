@@ -6,7 +6,7 @@
 <head>
   <title>{% block page_title %}soltree{% endblock %}</title>
   <meta charset="utf-8">
-  <script = type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/library/jquery-3.2.1.min.js' %}"></script>
   <link rel="stylesheet" type="text/css" href="{% static 'css/problem.css' %}"/>
 </head>
 
@@ -15,7 +15,7 @@
     <div id="div-problem">
       <text style="color:blue;font-size:30px">Question</text>
       <p id="question-body">
-        Ten people are sitting around a round table. The sum of ten dollars is to be distributed among them according to the rule that each person receives one half of the sum that his two neighbors receive jointly. Is there just one way to distribute the money? Prove your answer.
+        {{text}}
       </p>
     </div>
     {% block content %}

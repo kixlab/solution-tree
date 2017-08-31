@@ -2,16 +2,20 @@ from django.db import models
 from django.core.urlresolvers import reverse_lazy
 
 class problem(models.Model):
-    img = models.ImageField(upload_to='problem')
+    img = models.ImageField(upload_to='problem', null=True, blank=True)
     text = models.CharField(max_length=1000)
+    def __str__(self):
+        return str(self.text)
 
 class solution(models.Model):
     img = models.ImageField(upload_to='orig')
-    tagged_img = models.ImageField(upload_to='edit', null=True, blank=True)
-    problem_pk = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
+    tagged_img = models.ImageField(upload_to='tag', null=True, blank=True)
+    problem = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
     def get_absolute_url(self):
-        url = reverse_lazy('tag', kwargs={'pk': self.pk})
+        url = reverse_lazy('tag', kwargs={'problem_pk': self.problem.pk, 'pk': self.pk})
         return url
+    def __str__(self):
+        return str(self.pk)
 
 
 class node(models.Model):

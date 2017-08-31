@@ -7,7 +7,18 @@ img.addEventListener('load', function(){
   $("#sum-outer-div").height($("#div-img").height()+5);
   $("#sum-box").height($("#div-img").height()-53);
   img_height = $('#div-outer-img').height();
+  // $("#canvas").height(img_height);
+  // $("#canvas").width($("#div-img").width());
 });
+var tag_img = '';
+function save_tag_img()
+{
+  html2canvas($("#div-outer-img"), {
+    onrendered: function(canvas) {
+      tag_img = canvas.toDataURL("image/png");
+    }
+  });
+}
 
 function get_sum_num(){
   return $(".subsum").length;
@@ -152,11 +163,12 @@ function initDraw(canvas) {
             class : 'step_div'
           })
           step_div.html("Step "+ (get_sum_num()+1));
-          $('body').append(step_div);
+          $('#div-outer-img').append(step_div);
 
           ask_summarization(sum, element, step_div);
           element = null;
           console.log("finsihed.");
+          save_tag_img();
       }
     }
 }

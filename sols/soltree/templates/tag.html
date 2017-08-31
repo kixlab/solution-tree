@@ -1,6 +1,8 @@
 {% extends 'layout.html' %}
 {% load staticfiles %}
 {% block content %}
+  <script type="text/javascript" src="{% static 'js/library/html2canvas.min.js' %}"></script>
+
   <div style="padding:10px">
     <div>
       <p>
@@ -21,6 +23,7 @@
     </div>
     <script type="text/javascript" src="{% static 'js/problem.js' %}"></script>
     <script>
+
         {% for key, value in data.items %}
           if('{{key}}'.includes('sum'))
             ask_summarization('{{value}}');

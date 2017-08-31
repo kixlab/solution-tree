@@ -3,10 +3,12 @@
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
   <link rel="stylesheet" href="{% static 'css/select.css' %}">
-  <p>1. Choose your summarization(multiple choice is possible)</p>
-  <p>2. Choose similar step in existing tree.(multiple or no choice is possible)</p>
-  <p>3. If you think summarization is weird, you can fix it by clicking</p>
-  <p>p.s. If your solution doesn't exist in current tree, <span class='add_sol' style="color : blue; text-decoration : underline;cursor : pointer;">click this</span></p>
+  <div class"div-instruction">
+    <p>1. Choose your summarization(multiple choice is possible)</p>
+    <p>2. Choose similar step in existing tree.(multiple or no choice is possible)</p>
+    <p>3. If you think summarization is weird, you can fix it by clicking</p>
+    <p>p.s. If your solution doesn't exist in current tree, <span class='add_sol' style="color : blue; text-decoration : underline;cursor : pointer;">click this</span></p>
+  </div>
   <div id="sum-outer-div" style="width:20%;float:left;">
     <p id="ee"> My Summarization</p>
     <div id="sum-box"></div>
@@ -16,8 +18,8 @@
   <p class='add_sol' style="text-align:right;color : blue; text-decoration : underline;cursor : pointer;">Add new solution</p>
   <h3 style="text-align:center;">Ohters' solution summarization</h3>
   <div id="div-soltree" style="width:75%"></div>
-<script type="text/javascript" src = "{% static 'js/raphael.js' %}"></script>
-<script type="text/javascript" src = "{% static 'js/Treant.js' %}"></script>
+<script type="text/javascript" src = "{% static 'js/library/raphael.js' %}"></script>
+<script type="text/javascript" src = "{% static 'js/library/Treant.js' %}"></script>
 <script>
   var chart_config = {{chart_config|safe}};
 </script>

@@ -21,10 +21,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^problem/solve/$', solve),
-    url(r'^problem/check/(?P<pk>[0-9]+)/$', check, name="check"),
-    url(r'^problem/tag/(?P<pk>[0-9]+)/$', tag, name="tag"),
-    url(r'^problem/select/(?P<pk>[0-9]+)/$', select, name='select'),
-    url(r'^problem/submit/$', submit, name='submit'),
+    url(r'^problem(?P<problem_pk>[0-9]+)/solve/$', solve),
+    url(r'^problem(?P<problem_pk>[0-9]+)/check/(?P<pk>[0-9]+)/$', check, name="check"),
+    url(r'^problem(?P<problem_pk>[0-9]+)/tag/(?P<pk>[0-9]+)/$', tag, name="tag"),
+    url(r'^problem(?P<problem_pk>[0-9]+)/select/(?P<pk>[0-9]+)/$', select, name='select'),
+    url(r'^problem(?P<problem_pk>[0-9]+)/submit/$', submit, name='submit'),
 ]
 urlpatterns += static('upload_files', document_root=settings.MEDIA_ROOT)

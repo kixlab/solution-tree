@@ -3,8 +3,8 @@ function post_to_url(method) {
     path = window.location.href;
     path = path.replace('tag','select');
     params = {
+      tag_img : tag_img,
     };
-
     $(".p_sum").each(function(index){
       params['sum'+index.toString()] = $(this).text();
     });

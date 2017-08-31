@@ -1,19 +1,27 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import solutionForm
-from .models import solution, node
+from .models import solution, node, sub_how_to, problem
+from binascii import a2b_base64
 
-def solve(request):
+def get_dict_problem(problem_pk):
+    prob = problem.objects.get(pk=problem_pk)
+    return {'text' : prob.text, 'img' : prob.img}
+
+def solve(request, problem_pk):
     # return HttpResponse('안녕하세요')
-    print('in solve fn')
     if request.method=="POST":
         form = solutionForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save()
+            obj.problem = problem.objects.get(pk=problem_pk)
+            obj.save()
         return redirect(obj)
     else:
         form = solutionForm()
-    return render(request, 'solve.html', {'form':form,})
+    data_dict = get_dict_problem(problem_pk)
+    data_dict['form'] = form
+    return render(request, 'solve.html', data_dict)
 
 def check(request, pk):
     print("in check fn")
@@ -23,21 +31,19 @@ def check(request, pk):
         return HttpResponse("잘못된 request입니다.")
     return render(request, 'check.html', {'img_url':cursol.img.url})
 
-def tag(request, pk):
+def tag(request, problem_pk, pk):
     try:
         cursol = solution.objects.get(pk=pk)
     except solution.DoesNotExist:
         return HttpResponse("잘못된 request입니다.")
-    tot_dict = {}
-    data_dict = {}
+    data_dict = get_dict_problem(problem_pk)
     if request.method=="POST":
         print("here")
         for key,value in request.POST.items():
             data_dict[key]  = value
-    tot_dict['img'] = cursol.img
-    tot_dict['data'] = data_dict
-    print(tot_dict['data'])
-    return render(request, 'tag.html', tot_dict)
+    data_dict['img'] = cursol.img
+    data_dict['data'] = data_dict
+    return render(request, 'tag.html', data_dict)
 
 def make_config(parent_config, parent_pk, only_img):
     ret_list = [parent_config]
@@ -72,8 +78,27 @@ def make_config(parent_config, parent_pk, only_img):
 
 def select(request, pk):
     data_dict = {}
+    cursol = solution.objects.get(pk=pk)
+    if request.POST:
+        subs = sub_how_to.objects.filter(orig_sol=cursol)
+        subs.delete()
+
     for key,value in request.POST.items():
-        data_dict[key]  = value
+        if key=='tag_img':
+            path = 'edit/tagged_'+str(pk)+'.jpg'
+            binary_data = a2b_base64(value[22:])
+            fd = open('uploads/' + path, 'wb')
+            fd.write(binary_data)
+            fd.close()
+            print(cursol.img)
+            cursol.tagged_img = path
+            cursol.save()
+        elif 'sum' in key:
+            index = int(key.replace('sum', '')) +1
+            print(index)
+            temp_sub = sub_how_to(orig_sol=cursol, text=value, order=index)
+            temp_sub.save()
+            data_dict[key]  = value
     config = {
         'container' : "#div-soltree",
         'connectors' : {

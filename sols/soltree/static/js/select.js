@@ -1,3 +1,7 @@
+/*
+This file is for selecting node with exisitng node
+*/
+
 var checked = [];
 var refined_str = "";
 var is_picking = null;
@@ -91,7 +95,9 @@ $(".subsum").on("click", function(){
   is_picking = $(this).find(".div_num").html();
 })
 
-function create_third_prompt(picked_str, node){
+
+//Function for making prompt of refining explanation of node.
+function create_refine_prompt(picked_str, node){
   var prompt_div = $("<div>", {
     css : {
       position : 'absolute',
