@@ -1,3 +1,5 @@
+//transform data from server(chart_config) to acceptable data for Treant.js  
+
 for (var i = 2; i<chart_config.length;i++)
 {
   for(var j = 1; j<chart_config.length;j++)
