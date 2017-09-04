@@ -1,0 +1,29 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <title>{% block page_title %}soltree{% endblock %}</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="{% static 'js/library/jquery-3.2.1.min.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/problem.css' %}"/>
+</head>
+
+<body>
+  <div id='div-body'>
+    <div id="div-problem">
+      <text style="color:blue;font-size:30px">Question</text>
+      <p id="question-body">
+        Solve for x in the equation<br/>
+        2x + 4 = 6x + 10
+      </p>
+    </div>
+    <div id='div-tutorial-contents'>
+
+    </div>
+    <button>next</button>
+  </div>
+</body>
+
+</html>

@@ -95,101 +95,6 @@ $(".subsum").on("click", function(){
   is_picking = $(this).find(".div_num").html();
 })
 
-
-//Function for making prompt of refining explanation of node.
-function create_refine_prompt(picked_str, node){
-  var prompt_div = $("<div>", {
-    css : {
-      position : 'absolute',
-      left : 0.05*window.innerWidth,
-      width : 0.9 * window.innerWidth,
-      backgroundColor : 'white',
-      border : '1px solid black'
-    },
-    class : 'prompt'
-  });
-  var explanation_p = $("<p style='font-size:30px'>");
-  explanation_p.html('Choose the best summarization you think, it\'s possible to refine it');
-  var radio_div = $("<div>");
-  var rad1 = $("<input>", {
-    type : 'radio',
-    value : 1,
-    name : 'refining'
-  });
-  var text1 = $("<span>", {
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text1'
-  });
-  text1.html(picked_str + "<br>");
-  var rad2= $("<input>", {
-    type : 'radio',
-    value : 2,
-    name : 'refining'
-  });
-  var text2 = $("<span>", {
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text2'
-  });
-  text2.html(checked.join(", "));
-  text2.append("<br>");
-  var rad3 = $("<input>", {
-    type : 'radio',
-    value : 3,
-    name : 'refining'
-  });
-  var text3 = $("<input>", {
-    type : 'text',
-    width : '80%',
-    css : {
-      'font-size' : '25px'
-    },
-    id : 'text3'
-  });
-  text3.val(checked.join(", "));
-  radio_div.append(rad1);
-  radio_div.append(text1);
-  radio_div.append(rad2);
-  radio_div.append(text2);
-  radio_div.append(rad3);
-  radio_div.append(text3);
-  var done_button = $("<input>", {
-    type : 'button',
-    value : 'done',
-    css : {
-      margin : '5px',
-    }
-  });
-  done_button.on("click",function (){
-    var index = $('input[name=refining]:checked').val();
-    refined_str = $("#text"+index).val() || $("#text"+index).html();
-    node.find(".node-name").html(refined_str);
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
-  });
-  var no_button = $("<input>", {
-    type : 'button',
-    value : 'no',
-    css : {
-      margin : '5px',
-    }
-  });
-  no_button.on("click",function (){
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
-  });
-
-  prompt_div.append(explanation_p);
-  prompt_div.append(radio_div);
-  prompt_div.append(done_button);
-  prompt_div.append(no_button);
-  $("body").append(prompt_div);
-  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
-}
-
 $(".add_sol").on('click', function(){
   $("#div-body").addClass('blur');
   var prompt_div = $("<div>", {
@@ -248,31 +153,53 @@ $(".add_sol").on('click', function(){
         'width' : '30px',
         'height' : '30px'
       },
-      src : "/assets/img/edit_icon.png"
+      src : "/assets/img/edit.png"
     })
+    var success_img = $("<img>", {
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px',
+      },
+      src : "/assets/img/success.png"
+    });
+    success_img.hide();
     var del_img = $("<img>", {
       css : {
         'cursor' : 'pointer hand',
-        'width' : '25px',
-        'height' : '25px'
+        'width' : '30px',
+        'height' : '30px'
       },
-      src : "/assets/img/x_icon.png"
+      src : "/assets/img/error.png"
     });
     // del_span.html("X");
     edit_img.on("click", function(){
       var text_input = $("<input>", {
         type : 'text',
-        width : '500px',
+        width : 0.7 * window.innerWidth,
         placeholder : $(this).parent().parent().find(".content_div").html()
       });
+      $(this).hide();
+      success_img.show();
       $(this).parent().parent().find(".content_div").html(text_input);
+    })
+    success_img.on("click", function(){
+      var refine_text = $(this).parent().parent().find("input").val();
+      if(refine_text=="")
+      {
+         refine_text = $(this).parent().parent().find("input").attr('placeholder');
+      }
+      $(this).parent().parent().find(".content_div").html(refine_text);
+      $(this).hide();
+      edit_img.show();
     })
     del_img.on("click", function(){
       // TODO index update
       $(this).parent().parent().remove();
     });
     content_div.append(temp_div.find('.node-name').html());
-    del_div.append(edit_img)
+    del_div.append(edit_img);
+    del_div.append(success_img);
     del_div.append(del_img);
     temp_p.append(step_p);
     temp_p.append(content_div);

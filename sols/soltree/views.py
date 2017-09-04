@@ -76,29 +76,33 @@ def make_config(parent_config, parent_pk, only_img):
         ret_list.append(add_config)
     return ret_list
 
-def select(request, pk):
+def select(request, problem_pk, pk):
     data_dict = {}
     cursol = solution.objects.get(pk=pk)
+    cur_prob = problem.objects.get(pk=problem_pk)
     if request.POST:
         subs = sub_how_to.objects.filter(orig_sol=cursol)
         subs.delete()
-
-    for key,value in request.POST.items():
-        if key=='tag_img':
-            path = 'edit/tagged_'+str(pk)+'.jpg'
-            binary_data = a2b_base64(value[22:])
-            fd = open('uploads/' + path, 'wb')
-            fd.write(binary_data)
-            fd.close()
-            print(cursol.img)
-            cursol.tagged_img = path
-            cursol.save()
-        elif 'sum' in key:
-            index = int(key.replace('sum', '')) +1
-            print(index)
-            temp_sub = sub_how_to(orig_sol=cursol, text=value, order=index)
-            temp_sub.save()
-            data_dict[key]  = value
+        for key,value in request.POST.items():
+            if key=='tag_img':
+                path = 'edit/tagged_'+str(pk)+'.jpg'
+                binary_data = a2b_base64(value[22:])
+                fd = open('uploads/' + path, 'wb')
+                fd.write(binary_data)
+                fd.close()
+                print(cursol.img)
+                cursol.tagged_img = path
+                cursol.save()
+            elif 'sum' in key:
+                index = int(key.replace('sum', '')) +1
+                print(index)
+                temp_sub = sub_how_to(orig_sol=cursol, text=value, order=index)
+                temp_sub.save()
+                data_dict[key]  = value
+    else:
+        subs = sub_how_to.objects.filter(orig_sol=cursol)
+        for sub in subs:
+            data_dict['sum'+str(sub.order-1)] = sub.text
     config = {
         'container' : "#div-soltree",
         'connectors' : {
@@ -109,7 +113,7 @@ def select(request, pk):
         },
     }
     chart_config = [config]
-    root = node.objects.get(parentId=None)
+    root = node.objects.get(parentId=None, problem=cur_prob)
     root_config = {
         'pk' : root.pk,
         'text' : {
@@ -120,11 +124,28 @@ def select(request, pk):
     }
     tree_list = make_config(root_config, root.pk, True)
     chart_config.extend(tree_list)
-    return render(request, 'select.html', {'chart_config':chart_config, 'data' : data_dict})
+    tot_dict = get_dict_problem(problem_pk)
+    tot_dict['data'] = data_dict
+    tot_dict['chart_config'] = chart_config
+    return render(request, 'select.html', tot_dict)
 
 
 def submit(request):
     for key,value in request.POST.items():
         print(key, value)
     return HttpResponse("Thank you for testing!")
+
+def tutorial_solve(request):
+    if request.method=="POST":
+        print(1)
+        # obj = problem.objects.get(pk=42)
+        return tag(request, 2, 42)
+    else:
+        form = solutionForm()
+    data_dict = get_dict_problem(2)
+    data_dict['form'] = form
+    return render(request, 'solve.html', data_dict)
+
+def tutorial_tag(request):
+    pass
 # Create your views here.

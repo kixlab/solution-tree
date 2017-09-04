@@ -12,7 +12,10 @@ class solution(models.Model):
     tagged_img = models.ImageField(upload_to='tag', null=True, blank=True)
     problem = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
     def get_absolute_url(self):
-        url = reverse_lazy('tag', kwargs={'problem_pk': self.problem.pk, 'pk': self.pk})
+        if self.pk==42:
+            url = reverse_lazy('tutorial_tag')
+        else:
+            url = reverse_lazy('tag', kwargs={'problem_pk': self.problem.pk, 'pk': self.pk})
         return url
     def __str__(self):
         return str(self.pk)
@@ -21,6 +24,7 @@ class solution(models.Model):
 class node(models.Model):
     parentId = models.ForeignKey('self', null=True, blank=True)
     summarization = models.CharField(max_length=100)
+    problem = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.summarization
 
