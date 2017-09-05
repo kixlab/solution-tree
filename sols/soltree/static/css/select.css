@@ -62,6 +62,10 @@ input[type=text]
   filter : blur(3px);
 }
 
+.sum-selecting{
+  background-color : #3b46e5 !important
+}
+
 .sum-selected {
   background-color: #656eed !important;
 }

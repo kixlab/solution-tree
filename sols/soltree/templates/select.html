@@ -25,9 +25,9 @@
 </script>
 <script type="text/javascript" src="{% static 'js/soltree.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/match1.js' %}"></script>
+<button id="btn" style="position:absolute" onclick="show_refine();" type="submit">next</button>
 <form id="formtag" method='POST'>
   {% csrf_token %}
-<button id="btn" style="position:absolute"onclick="go_submit();" type="submit">next</button>
 </form>
 
 <script>
@@ -36,11 +36,11 @@
     if('{{key}}'.includes('sum'))
       sum_data.push('{{value}}');
   {%endfor%}
-  $("#vert-line").height((sum_data.length*100+138)+'px');
-  $("#sum-outer-div").height((sum_data.length*100+130)+'px');
-  $("#sum-box").height((sum_data.length*100+80)+'px');
+  $("#vert-line").height((sum_data.length*120+78)+'px');
+  $("#sum-outer-div").height((sum_data.length*120+70)+'px');
+  $("#sum-box").height((sum_data.length*120+20)+'px');
   $("#btn").css({
-    top : (sum_data.length*100 + 550)+'px',
+    top : (sum_data.length*120 + 480)+'px',
     left : '20px'
   })
   var tree = new Treant(chart_config, null , $);

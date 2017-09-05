@@ -36,7 +36,6 @@ canvas {
 #sum-box {
   margin-bottom: 10px;
   width : 100%;
-  height : 250px;
   border: 1px solid #0000aa;
   filter : blur(0);
 }

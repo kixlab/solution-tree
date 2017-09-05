@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% load staticfiles %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
+  <link rel="stylesheet" href="{% static 'css/select.css' %}">
+  <link rel="stylesheet" href="{% static 'css/explore.css' %}">
+  <div id="div-detail" style="width:25%;float:left;">
+    <p id="ee"> Detail notes </p>
+    <div id="cur-summary">Current summary<p class='selected-sum'>Prove satisfaction when everyone have same money<p></div>
+    <div id="instructor-note">
+      Instructor's note<br/>
+      <div id='div-inst-note' class='inner-note'>Easy but essential</div>
+    </div>
+    <div id='student-note'>
+      Student's note<br/>
+      <div id='div-stu-note' class='inner-note'>
+        1. Just show average of left&right is same with middle<br/>
+        2. Maybe #induct way is more simpler
+      </div>
+    </div>
+    <h4>write your own note for this summarization</h4>
+    <textarea id='own-sum'></textarea>
+    <input type='button' value='enter'>
+  </div>
+  <h3 style="text-align:center;">Others' solution summarization</h3>
+  <div id="div-soltree" style="width:75%"></div>
+<script type="text/javascript" src = "{% static 'js/library/raphael.js' %}"></script>
+<script type="text/javascript" src = "{% static 'js/library/Treant.js' %}"></script>
+<script>
+  var chart_config = {{chart_config|safe}};
+</script>
+<script type="text/javascript" src="{% static 'js/soltree.js' %}"></script>
+<!-- <button id="btn" style="position:absolute" onclick="show_refine();" type="submit">next</button> -->
+
+<script>
+  var sum_data = [];
+  {% for key, value in data.items %}
+    if('{{key}}'.includes('sum'))
+      sum_data.push('{{value}}');
+  {%endfor%}
+  $("#btn").css({
+    top : (sum_data.length*120 + 480)+'px',
+    left : '20px'
+  })
+  var tree = new Treant(chart_config, null , $);
+</script>
+<script type="text/javascript" src="{% static 'js/explore.js' %}"></script>
+
+<p></p>
+
+{% endblock %}

@@ -1,0 +1,46 @@
+#cur-summary
+{
+  /*padding : 5px;*/
+  margin-bottom: 10px;
+  width : 100%;
+  border: 1px solid #0000aa;
+}
+
+.selected-sum
+{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.inner-note
+{
+  font-size : 15px;
+  font-weight : bold;
+}
+
+#instructor-note
+{
+  /*padding : 5px;*/
+  margin-bottom: 10px;
+  width : 100%;
+  border: 1px solid #aa0000;
+}
+
+#student-note
+{
+  /*padding : 5px;*/
+  margin-bottom: 10px;
+  width : 100%;
+  border: 1px solid #0000aa;
+}
+
+#own-sum
+{
+  width :100%;
+  height : 150px;
+}
+
+textarea
+{
+  font-size : 25px;
+}

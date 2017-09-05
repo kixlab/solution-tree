@@ -29,7 +29,8 @@ class node(models.Model):
         return self.summarization
 
 class annotation(models.Model):
-    node_pk = models.ForeignKey(node, on_delete=models.CASCADE)
+    node = models.ForeignKey(node, on_delete=models.CASCADE)
+    is_inst = models.BooleanField(default=False)
     text = models.CharField(max_length=300)
     # is_instructor = models.BooleanField()
 

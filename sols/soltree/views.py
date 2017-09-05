@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import solutionForm
-from .models import solution, node, sub_how_to, problem
+from .models import solution, node, sub_how_to, problem, annotation
 from binascii import a2b_base64
+from django.http import JsonResponse
 
 def get_dict_problem(problem_pk):
     prob = problem.objects.get(pk=problem_pk)
@@ -130,10 +131,49 @@ def select(request, problem_pk, pk):
     return render(request, 'select.html', tot_dict)
 
 
-def submit(request):
+def explore(request, problem_pk):
     for key,value in request.POST.items():
         print(key, value)
-    return HttpResponse("Thank you for testing!")
+    cur_prob = problem.objects.get(pk=problem_pk)
+    config = {
+        'container' : "#div-soltree",
+        'connectors' : {
+            'type' : 'step'
+        },
+        'node' : {
+            'HTMLclass' : 'nodeExample1',
+        },
+    }
+    chart_config = [config]
+    root = node.objects.get(parentId=None, problem=cur_prob)
+    root_config = {
+        'pk' : root.pk,
+        'text' : {
+            'name' : 'Start',
+        },
+        'HTMLid' : 'node_'+str(root.pk),
+        'HTMLclass' : 'root',
+    }
+    tree_list = make_config(root_config, root.pk, True)
+    chart_config.extend(tree_list)
+    tot_dict = get_dict_problem(problem_pk)
+    tot_dict['chart_config'] = chart_config
+    return render(request, 'explore.html', tot_dict)
+
+def get_annotations(request):
+    node_pk = int(request.GET.get('node_pk'))
+    cur_node = node.objects.get(pk=node_pk)
+    inst_note = annotation.objects.get(is_inst=True, node=cur_node).text
+    student_notes = annotation.objects.filter(node=cur_node, is_inst=False)
+    student_dict = {}
+    student_dict['len'] = len(student_notes)
+    for i in range(len(student_notes)):
+        student_dict[str(i)] = student_notes[i].text
+    data = {
+        'inst' : inst_note,
+        'student_dict' : student_dict
+    }
+    return JsonResponse(data)
 
 def tutorial_solve(request):
     if request.method=="POST":

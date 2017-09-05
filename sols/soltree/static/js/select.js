@@ -35,7 +35,9 @@ $(".childnode").on("click", function(){
     $(this).addClass("selected");
     $(this).find('.div-steps').append(is_picking);
   }
-
+  var cnt = $(".childnode").length;
+  if(deepest_div==null)
+    deepest_div_pk = 0;
   $(".childnode").each(function(){
     if($(this).find(".div-steps").html())
     {
@@ -45,7 +47,12 @@ $(".childnode").on("click", function(){
         deepest_div = $(this);
       }
     }
+    else {
+      cnt--;
+    }
   });
+  if(cnt==0)
+    deepest_div = null;
   give_token(deepest_div, 0);
   $(".childnode").removeClass("selectable");
   $(".childnode[token='yes']").addClass("selectable");
@@ -55,43 +62,63 @@ $(".childnode").on("click", function(){
 });
 
 $(".subsum").on("click", function(){
-  if($(this).hasClass('sum-selected') || is_picking)
+  if(is_picking)
     return;
-  $(this).addClass('sum-selected');
-  var btn_confirm = $("<input>", {
-    type : 'button',
-    value : 'confirm',
-    css : {
-      'margin' : '4px'
-    },
-    width : '55px'
-  });
-  var btn_fix = $("<input>", {
-    type : 'button',
-    value : 'fix',
-    css : {
-      'margin' : '4px',
-      'display' : 'none'
-    },
-    width : '55px'
-  });
-  btn_confirm.on("click", function(){
-    $(".selected").removeClass('selected');
-    is_picking = null;
-    $(this).hide();
-    $(this).parent().find('input[value="fix"]').show();
-  })
-  btn_fix.on("click", function(){
-    is_picking = $(this).parent().parent().find(".div_num").html();
-    $(".childnode").each(function(){
-      if($(this).find('.div-steps').html().includes(is_picking))
-        $(this).addClass("selected");
+  $(this).addClass('sum-selecting');
+  if($(this).find("input").length!=2)
+  {
+    var btn_confirm = $("<input>", {
+      type : 'button',
+      value : 'confirm',
+      css : {
+        'margin' : '4px'
+      },
+      width : '55px'
+    });
+    var btn_fix = $("<input>", {
+      type : 'button',
+      value : 'fix',
+      css : {
+        'margin' : '4px',
+        'display' : 'none'
+      },
+      width : '55px'
+    });
+    btn_confirm.on("click", function(e){
+      e.stopPropagation();
+      $(".selected").removeClass('selected');
+      is_picking = null;
+      $(this).hide();
+      $(this).parent().find('input[value="fix"]').show();
+      $(this).parent().parent().removeClass('sum-selecting')
+      $(this).parent().parent().addClass('sum-selected');
+      if(!$(this).parent().parent().next().hasClass("sum-selected")&&!$(this).parent().parent().next().hasClass("sum-selecting"))
+        $(this).parent().parent().next().click();
     })
-    $(this).hide();
-    $(this).parent().find('input[value="confirm"]').show();
-  })
-  $(this).find('.div-btn').append(btn_confirm);
-  $(this).find('.div-btn').append(btn_fix);
+    btn_fix.on("click", function(e){
+      e.stopPropagation();
+      $(".subsum").each(function(){
+        if($(this).hasClass("sum-selecting"))
+        {
+          $(this).removeClass('sum-selecting');
+          $(this).addClass('sum-selected');
+          $(this).find("input[value='confirm']").hide();
+          $(this).find("input[value='fix']").show();
+        }
+      });
+      $(this).parent().parent().removeClass('sum-selected');
+      $(this).parent().parent().addClass('sum-selecting');
+      is_picking = $(this).parent().parent().find(".div_num").html();
+      $(".childnode").each(function(){
+        if($(this).find('.div-steps').html().includes(is_picking))
+          $(this).addClass("selected");
+      })
+      $(this).hide();
+      $(this).parent().find('input[value="confirm"]').show();
+    })
+    $(this).find('.div-btn').append(btn_confirm);
+    $(this).find('.div-btn').append(btn_fix);
+  }
   is_picking = $(this).find(".div_num").html();
 })
 
@@ -148,6 +175,7 @@ $(".add_sol").on('click', function(){
       }
     });
     var edit_img = $("<img>", {
+      class : 'edit_img',
       css : {
         'cursor' : 'pointer hand',
         'width' : '30px',
@@ -156,6 +184,7 @@ $(".add_sol").on('click', function(){
       src : "/assets/img/edit.png"
     })
     var success_img = $("<img>", {
+      class : 'success_img',
       css : {
         'cursor' : 'pointer hand',
         'width' : '30px',
@@ -180,7 +209,7 @@ $(".add_sol").on('click', function(){
         placeholder : $(this).parent().parent().find(".content_div").html()
       });
       $(this).hide();
-      success_img.show();
+      $(this).parent().find(".success_img").show();
       $(this).parent().parent().find(".content_div").html(text_input);
     })
     success_img.on("click", function(){
@@ -191,7 +220,7 @@ $(".add_sol").on('click', function(){
       }
       $(this).parent().parent().find(".content_div").html(refine_text);
       $(this).hide();
-      edit_img.show();
+      $(this).parent().find(".edit_img").show();
     })
     del_img.on("click", function(){
       // TODO index update
@@ -229,15 +258,89 @@ $(".add_sol").on('click', function(){
   div_add.on("click", function(){
     var index = $('.step_p').length;
     var temp_p = $("<p>", {
-      class : 'step_p'
+      class : 'line_p'
+    });
+    var content_div = $("<div>", {
+      class : 'content_div',
+      css : {
+        'float' : 'left',
+      }
     });
     var text_input = $("<input>", {
       class : 'new_node',
       type : 'text',
-      width : '80%',
+      width :  0.7 * window.innerWidth,
     })
-    temp_p.html("Step "+ (index+1) + " : ");
-    temp_p.append(text_input);
+    var del_div = $("<div>", {
+      class : 'del_div',
+      css : {
+        'text-align' : 'right',
+        'width' : '100%',
+      }
+    });
+    var edit_img = $("<img>", {
+      class : 'edit_img',
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px'
+      },
+      src : "/assets/img/edit.png"
+    })
+    var success_img = $("<img>", {
+      class : 'success_img',
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px',
+      },
+      src : "/assets/img/success.png"
+    });
+    var del_img = $("<img>", {
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px'
+      },
+      src : "/assets/img/error.png"
+    });
+    // del_span.html("X");
+    edit_img.on("click", function(){
+      var text_input = $("<input>", {
+        type : 'text',
+        width : 0.7 * window.innerWidth,
+        placeholder : $(this).parent().parent().find(".content_div").html()
+      });
+      $(this).hide();
+      $(this).parent().find(".success_img").show();
+      $(this).parent().parent().find(".content_div").html(text_input);
+    });
+    edit_img.hide();
+    success_img.on("click", function(){
+      var refine_text = $(this).parent().parent().find("input").val();
+      if(refine_text=="")
+      {
+         refine_text = $(this).parent().parent().find("input").attr('placeholder');
+      }
+      if(refine_text==undefined)
+      {
+        refine_text = ""
+      }
+      $(this).parent().parent().find(".content_div").html(refine_text);
+      $(this).hide();
+      $(this).parent().find(".edit_img").show();
+    })
+    del_img.on("click", function(){
+      // TODO index update
+      $(this).parent().parent().remove();
+    });
+    del_div.append(success_img);
+    del_div.append(edit_img);
+    del_div.append(del_img);
+    temp_p.html('<span class="step_p" style="float: left;">Step '+(index+1)+' :&nbsp;</span>');
+    content_div.append(text_input);
+    temp_p.append(content_div);
+    temp_p.append(del_div);
     div_picked_item.append(temp_p);
   });
   var done_button = $("<input>", {
@@ -323,8 +426,157 @@ function make_new_chart_config(){
   var tree = new Treant(new_chart_config, null, $);
   return 0;
 }
+
+function show_refine(){
+  $("#div-body").addClass('blur');
+  var prompt_div = $("<div>", {
+    css : {
+      position : 'absolute',
+      left : 0.05*window.innerWidth,
+      width : 0.9 * window.innerWidth,
+      backgroundColor : 'white',
+      border : '1px solid black'
+    },
+    class : 'prompt'
+  });
+  var p_explanation = $("<p>", {
+    css : {
+      'font-size' : '30px'
+    }
+  });
+  p_explanation.html("You picked following steps!");
+
+  var div_picked_item = $("<div>", {
+    css : {
+      'font-size' : '25px',
+    }
+  });
+  temp_div = deepest_div;
+  while(temp_div!=null)
+  {
+    if(temp_div.hasClass('root'))
+      break;
+    var temp_p = $("<p>", {
+      class : 'line_p'
+    });
+    var step_p = $("<span>", {
+      class : 'step_p',
+      css : {
+        'float' : 'left',
+      }
+    });
+    var content_div = $("<div>", {
+      class : 'content_div',
+      pk : parseInt(temp_div.attr("id").replace("node_","")),
+      css : {
+        'float' : 'left',
+      }
+    });
+    var del_div = $("<div>", {
+      class : 'del_div',
+      css : {
+        'text-align' : 'right',
+        'width' : '100%',
+      }
+    });
+    var edit_img = $("<img>", {
+      class : 'edit_img',
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px'
+      },
+      src : "/assets/img/edit.png"
+    })
+    var success_img = $("<img>", {
+      class : 'success_img',
+      css : {
+        'cursor' : 'pointer hand',
+        'width' : '30px',
+        'height' : '30px',
+      },
+      src : "/assets/img/success.png"
+    });
+    success_img.hide();
+    // var del_img = $("<img>", {
+    //   css : {
+    //     'cursor' : 'pointer hand',
+    //     'width' : '30px',
+    //     'height' : '30px'
+    //   },
+    //   src : "/assets/img/error.png"
+    // });
+    // del_span.html("X");
+    edit_img.on("click", function(){
+      var text_input = $("<input>", {
+        type : 'text',
+        width : 0.7 * window.innerWidth,
+        placeholder : $(this).parent().parent().find(".content_div").html()
+      });
+      $(this).hide();
+      $(this).parent().find(".success_img").show();
+      $(this).parent().parent().find(".content_div").html(text_input);
+    })
+    success_img.on("click", function(){
+      var refine_text = $(this).parent().parent().find("input").val();
+      if(refine_text=="")
+      {
+         refine_text = $(this).parent().parent().find("input").attr('placeholder');
+      }
+      $(this).parent().parent().find(".content_div").html(refine_text);
+      $(this).hide();
+      $(this).parent().find(".edit_img").show();
+    })
+    content_div.append(temp_div.find('.node-name').html());
+    del_div.append(edit_img);
+    del_div.append(success_img);
+    // del_div.append(del_img);
+    temp_p.append(step_p);
+    temp_p.append(content_div);
+    temp_p.append(del_div);
+    div_picked_item.prepend(temp_p);
+    temp_pk = get_pk_from_div(temp_div);
+    temp_div = get_parent_div_by_pk(temp_pk);
+  }
+  var done_button = $("<input>", {
+    type : 'button',
+    value : 'done',
+    css : {
+      margin : '5px',
+    }
+  });
+  done_button.on("click",function (){
+    go_submit();
+    $(this).parent().remove();
+    $("#div-body").removeClass('blur');
+  });
+  var close_button = $("<input>", {
+    type : 'button',
+    value : 'close',
+    css : {
+      margin : '5px',
+    }
+  });
+  close_button.on("click",function (){
+    $(this).parent().remove();
+    not_from_close = false;
+    $(".last").click();
+    $("#div-body").removeClass('blur');
+  });
+
+  prompt_div.append(p_explanation);
+  prompt_div.append(div_picked_item);
+  prompt_div.append(done_button);
+  prompt_div.append(close_button);
+  $("body").append(prompt_div);
+  $(".step_p").each(function(index){
+    $(this).append("Step "+ (index+1) + " :&nbsp;" );
+  });
+  prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
+}
+
 function go_submit(method){
-  var path = '/problem/submit/';
+  var path = '/problem1/explore/';
   method = method || "post";
   params = {
     parent_key : parent_key,
@@ -342,9 +594,12 @@ function go_submit(method){
     hiddenField.setAttribute("value", params[key]);
     form.appendChild(hiddenField);
   }
+  form.submit();
 }
 
 
 $( document ).ready(function() {
     $(".root").click();
 });
+
+$("#subsum1").click();
