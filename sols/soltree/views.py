@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import solutionForm
-from .models import solution, node, sub_how_to, problem, annotation
+from .models import solution, node, sub_how_to, problem, annotation, answer
 from binascii import a2b_base64
 from django.http import JsonResponse
 
 def get_dict_problem(problem_pk):
     prob = problem.objects.get(pk=problem_pk)
-    return {'text' : prob.text, 'img' : prob.img}
+    return {'text' : prob.text, 'prob_img' : prob.img}
 
 def solve(request, problem_pk):
     # return HttpResponse('안녕하세요')
@@ -185,6 +185,19 @@ def tutorial_solve(request):
     data_dict = get_dict_problem(2)
     data_dict['form'] = form
     return render(request, 'solve.html', data_dict)
+
+def check_answer(request):
+    problem_pk = int(request.GET.get('problem_pk'))
+    cur_problem = problem.objects.get(pk=problem_pk)
+    cur_answer = answer.objects.filter(problem=cur_problem)
+    data = {}
+    if cur_answer.exists():
+        data['exist'] = '1'
+        data['img_url'] = cur_answer[0].img.url
+        data['text'] = cur_answer[0].text
+    else:
+        data['exist'] = '0'
+    return JsonResponse(data)
 
 def tutorial_tag(request):
     pass

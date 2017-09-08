@@ -1,4 +1,4 @@
-$('.childnode').on('click', function(){
+  $('.childnode').on('click', function(){
   var node_pk = parseInt($(this).attr('id').replace("node_",""));
   $('.selected-sum').html($(this).find(".node-name").html());
   $.ajax({

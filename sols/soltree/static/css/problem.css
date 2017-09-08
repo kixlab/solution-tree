@@ -27,7 +27,7 @@ canvas {
 .rectangle {
     border: 1px solid #FF0000;
     position: absolute;
-    z-index: 1000;
+    z-index: 5;
 }
 
 #sol-img {

@@ -258,7 +258,7 @@ $(".add_sol").on('click', function(){
   div_add.on("click", function(){
     var index = $('.step_p').length;
     var temp_p = $("<p>", {
-      class : 'line_p'
+      class : 'line_p add_p'
     });
     var content_div = $("<div>", {
       class : 'content_div',

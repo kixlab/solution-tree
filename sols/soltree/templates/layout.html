@@ -17,6 +17,9 @@
       <p id="question-body">
         {{text}}
       </p>
+      {% if prob_img %}
+        <img src='{{prob_img.url}}' style="border:1px solid; padding:10px"/>
+      {% endif %}
     </div>
     {% block content %}
     {% endblock %}

@@ -23,7 +23,6 @@
     </div>
     <script type="text/javascript" src="{% static 'js/problem.js' %}"></script>
     <script>
-
         {% for key, value in data.items %}
           if('{{key}}'.includes('sum'))
             ask_summarization('{{value}}');
@@ -34,7 +33,8 @@
     <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
     <form id="formtag" method='POST'>
       {% csrf_token %}
-    <button onclick="post_to_url()" type="submit">next</button>
+    <button id="form-submit" style="display:none;" onclick="post_to_url()" type="submit"></button>
     </form>
   </div>
+  <button onclick="check_answer()">next</button>
 {% endblock %}
