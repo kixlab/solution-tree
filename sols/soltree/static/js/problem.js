@@ -206,7 +206,7 @@ $("#span-rotate").on('click', function(){
       '-moz-transform-origin':'0px 0px',
       '-ms-transform-origin':'0px 0px',
       'transform-origin':'0px 0px',
-      'max-width' : img_height
+      'max-height' : img_height
     });
   }
   else if(rotate_cnt==2)
@@ -231,7 +231,7 @@ $("#span-rotate").on('click', function(){
       '-moz-transform-origin':'0px 0px',
       '-ms-transform-origin':'0px 0px',
       'transform-origin':'0px 0px',
-      'max-width' : img_height
+      'max-height' : img_height
     });
   }
 });
