@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from soltree.views import solve, check, tag, select, explore, tutorial_solve, tutorial_tag, get_annotations, check_answer
+from soltree.views import solve, check, tag, select, explore, tutorial_solve, tutorial_tag, get_annotations, check_answer, index
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^problem(?P<problem_pk>[0-9]+)/tag/(?P<pk>[0-9]+)/$', tag, name="tag"),
     url(r'^problem(?P<problem_pk>[0-9]+)/select/(?P<pk>[0-9]+)/$', select, name='select'),
     url(r'^problem(?P<problem_pk>[0-9]+)/explore/$', explore, name='explore'),
+    url(r'^index/$', index, name='index'),
     url(r'^ajax/get_annotations/$', get_annotations, name='get_annotations'),
     url(r'^ajax/check_answer/$', check_answer, name='check_answer'),
     url(r'^tutorial', tutorial_solve, name='tutorial'),

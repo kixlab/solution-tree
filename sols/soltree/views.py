@@ -199,6 +199,16 @@ def check_answer(request):
         data['exist'] = '0'
     return JsonResponse(data)
 
+def index(request):
+    data_dict = {}
+    problem_dict = {}
+    i = 1
+    for cur_problem in problem.objects.order_by('pk'):
+        problem_dict[str(i)] = cur_problem.pk
+        i+=1
+    data_dict['problem'] = problem_dict
+    return render(request, 'index.html', data_dict)
+
 def tutorial_tag(request):
     pass
 # Create your views here.

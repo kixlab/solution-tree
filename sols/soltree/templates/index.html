@@ -1,0 +1,15 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+
+<html lang='ko'>
+  <head>
+    <title>{% block page_title %}soltree{% endblock %}</title>
+    <meta charset="utf-8">
+  </head>
+    {% for key, value in problem.items %}
+      <a href="/problem{{value}}/solve">problem {{key}}</a><br/>
+    {%endfor%}
+  <body>
+  </body>
+</html>
