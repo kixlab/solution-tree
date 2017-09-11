@@ -576,7 +576,11 @@ function show_refine(){
 }
 
 function go_submit(method){
-  var path = '/problem1/explore/';
+  var url = window.location.href;
+  var re = new RegExp('http://127.0.0.1:8000/problem([0-9]+).*')
+  var myarray = re.exec(url);
+  var problem_pk = myarray[1];
+  var path = '/problem'+problem_pk+'/explore/';
   method = method || "post";
   params = {
     parent_key : parent_key,
