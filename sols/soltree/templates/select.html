@@ -3,21 +3,39 @@
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
   <link rel="stylesheet" href="{% static 'css/select.css' %}">
-  <div class"div-instruction">
+  <link rel="stylesheet" href="{% static 'css/soltree-interface.css' %}">
+  <!-- <div class"div-instruction">
     <p>1. Choose your summarization(multiple choice is possible)</p>
     <p>2. Choose similar step in existing tree.(multiple or no choice is possible)</p>
     <p>3. If you think summarization is weird, you can fix it by clicking</p>
     <p>p.s. If your solution doesn't exist in current tree, <span class='add_sol' style="color : blue; text-decoration : underline;cursor : pointer;">click this</span></p>
+  </div> -->
+  <div id='soltree-interface' style="margin:10px">
+    <div id="soltree-interface-head">
+      <div style="width:50%;float:left;">
+        <div id="soltree-interface-head-name" style="float:left;height:25px;">
+          <span style="font-size:20px">SOLUTION TREE</span> <img src="/assets/img/question.png" style="width:15px;height:15px;">
+        </div>
+      </div>
+      <div style="width:50%;float:left;height:25px;">
+        <div id="soltree-interface-head-util" style="float:right;">
+          Add new solution
+        </div>
+      </div>
+    </div>
+    <div id="soltree-interface-body" style="width:100%">
+      <div id="sum-outer-div" style="width:20%;float:left;">
+        <p id="ee"> My Summarization</p>
+        <div id="sum-box"></div>
+      </div>
+      <div style="width:2%;height:10px;float:left;"></div>
+      <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
+      <h3 style="text-align:center;">Others' solution summarization <img src="/assets/img/question.png" style="width:15px;height:15px;"></h3>
+      <div id="div-soltree" style="width:75%"></div>
+      <div>
+      </div>
+    </div>
   </div>
-  <div id="sum-outer-div" style="width:20%;float:left;">
-    <p id="ee"> My Summarization</p>
-    <div id="sum-box"></div>
-  </div>
-  <div style="width:2%;height:10px;float:left;"></div>
-  <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
-  <p class='add_sol' style="text-align:right;color : blue; text-decoration : underline;cursor : pointer;">Add new solution</p>
-  <h3 style="text-align:center;">Others' solution summarization</h3>
-  <div id="div-soltree" style="width:75%"></div>
 <script type="text/javascript" src = "{% static 'js/library/raphael.js' %}"></script>
 <script type="text/javascript" src = "{% static 'js/library/Treant.js' %}"></script>
 <script>
@@ -25,7 +43,9 @@
 </script>
 <script type="text/javascript" src="{% static 'js/soltree.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/match1.js' %}"></script>
-<button id="btn" style="position:absolute" onclick="show_refine();" type="submit">next</button>
+<div style="text-align:right;">
+  <button id="btn" onclick="show_refine();" type="submit">next</button>
+</div>
 <form id="formtag" method='POST'>
   {% csrf_token %}
 </form>
@@ -39,10 +59,10 @@
   $("#vert-line").height((sum_data.length*120+78)+'px');
   $("#sum-outer-div").height((sum_data.length*120+70)+'px');
   $("#sum-box").height((sum_data.length*120+20)+'px');
-  $("#btn").css({
-    top : (sum_data.length*120 + 480)+'px',
-    left : '20px'
-  })
+  // $("#btn").css({
+  //   top : (sum_data.length*120 + 480)+'px',
+  //   left : '20px'
+  // })
   var tree = new Treant(chart_config, null , $);
   {% for key, value in data.items %}
     if('{{key}}'.includes('sum'))

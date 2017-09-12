@@ -11,7 +11,7 @@ function check_answer(){
     dataType : 'json',
     success : function(data)
     {
-      if(data.exist)
+      if(data.exist == '1')
       {
         $('#div-body').addClass('blur');
         var prompt_div = $("<div>", {

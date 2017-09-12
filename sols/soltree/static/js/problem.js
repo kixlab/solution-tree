@@ -90,6 +90,7 @@ function ask_summarization(sum, box, step_div) {
   div_tot.append(div_num);
   div_tot.append(div_del);
   div_tot.append(p_sum);
+  $("#sum-box").height((100+width_sum*0.05)*($(".subsum").length)+width_sum*0.05);
 };
 
 var element = null;

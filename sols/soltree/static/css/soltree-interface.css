@@ -1,0 +1,26 @@
+#soltree-interface-head
+{
+  padding : 10px;
+  height:25px;
+  background-color: #b3b6bc;
+}
+
+
+#soltree-interface-body
+{
+  height:auto;
+  background-color: #dadde5;
+}
+
+#soltree-interface-body-sumbox
+{
+  /*border-right: 1px solid #000000;*/
+  width:25%;
+  float:left;
+}
+
+#soltree-interface-body-tree
+{
+  float:left;
+  width:74%;
+}
