@@ -15,6 +15,8 @@ $('.childnode').on('click', function(){
     {
       $("#div-inst-note").html(data.inst);
       $("#div-stu-note").html('');
+      if(data.student_dict.len==0)
+        $("#div-stu-note").append("no note from student");
       for(var i=0;i<data.student_dict.len;i++)
       {
         $("#div-stu-note").append((i+1)+ ". " + data.student_dict[i.toString()] + '<br/>');
