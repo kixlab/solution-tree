@@ -70,6 +70,10 @@ input[type=text]
   background-color: #656eed !important;
 }
 
+.add_sol {
+  color : 'blue';
+}
+
 .add_sol:hover{
   text-decoration: underline;
   cursor : pointer;

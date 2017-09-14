@@ -4,6 +4,8 @@
     <link rel="stylesheet" href="{% static 'css/Treant.css' %}">
   <link rel="stylesheet" href="{% static 'css/select.css' %}">
   <link rel="stylesheet" href="{% static 'css/explore.css' %}">
+  <link rel="stylesheet" href="{% static 'css/library/jquery.toast.min.css' %}">
+  <script type="text/javascript" src="{% static 'js/library/jquery.toast.min.js' %}"></script>
   <div id="div-detail" style="width:25%;float:left;">
     <p id="ee"> Detail notes </p>
     <div id="cur-summary">Current summary<p class='selected-sum'>Prove satisfaction when everyone have same money<p></div>
@@ -20,7 +22,7 @@
     </div>
     <h4>write your own note for this summarization</h4>
     <textarea id='own-sum'></textarea>
-    <input type='button' value='enter'>
+    <input id="btn-enter" type='button' value='enter'>
   </div>
   <h3 style="text-align:center;">Others' solution summarization</h3>
   <div id="div-soltree" style="width:75%"></div>

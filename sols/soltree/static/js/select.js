@@ -401,14 +401,12 @@ $(".add_sol").on('click', function(){
       $(".add_p").each(function(index){
         data_dict['node'+index] = $(this).find(".content_div").html();
       });
-
-
       $.ajax({
         url : '/ajax/add_node',
         data : data_dict,
         success : function()
         {
-          alert(11);
+          go_submit();
         }
       })
     }
@@ -600,21 +598,10 @@ function go_submit(method){
   var path = '/problem'+problem_pk+'/explore/';
   method = method || "post";
   params = {
-    parent_key : parent_key,
+    problem_pk : problem_pk,
   };
-  for(var i=0;i<new_chart_config.length - chart_config.length;i++)
-  {
-    params[i+''] = new_chart_config[chart_config.length+i]['text']['name'];
-  }
   var form = document.getElementById("formtag");
   form.setAttribute("action", path);
-  for(var key in params){
-    var hiddenField = document.createElement("input");
-    hiddenField.setAttribute("type", "hidden");
-    hiddenField.setAttribute("name", key);
-    hiddenField.setAttribute("value", params[key]);
-    form.appendChild(hiddenField);
-  }
   form.submit();
 }
 

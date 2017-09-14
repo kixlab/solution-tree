@@ -175,16 +175,21 @@ def explore(request, problem_pk):
 def get_annotations(request):
     node_pk = int(request.GET.get('node_pk'))
     cur_node = node.objects.get(pk=node_pk)
-    inst_note = annotation.objects.get(is_inst=True, node=cur_node).text
+    try:
+        inst_note = annotation.objects.get(is_inst=True, node=cur_node).text
+        data = {
+            'inst' : inst_note
+        }
+    except annotation.DoesNotExist:
+        data = {
+            'inst' : 'no note from instructor',
+        }
     student_notes = annotation.objects.filter(node=cur_node, is_inst=False)
     student_dict = {}
     student_dict['len'] = len(student_notes)
     for i in range(len(student_notes)):
         student_dict[str(i)] = student_notes[i].text
-    data = {
-        'inst' : inst_note,
-        'student_dict' : student_dict
-    }
+    data['student_dict'] = student_dict
     return JsonResponse(data)
 
 def tutorial_solve(request):
@@ -218,7 +223,7 @@ def add_node(request):
         parent_node = node.objects.get(parentId=None, problem=cur_prob)
     else:
         parent_pk = int(request.GET.get('parent_pk'))
-        parent_node = node.objdects.get(pk=parent_pk)
+        parent_node = node.objects.get(pk=parent_pk)
     node_array = request.GET.get('node_array')
     for key in request.GET:
         if 'node' in key:
@@ -227,6 +232,15 @@ def add_node(request):
             new_node.save()
             parent_node = new_node
     return JsonResponse({})
+
+def add_note(request):
+    node_pk = int(request.GET.get('node_pk'))
+    note_text = request.GET.get('text')
+    cur_node = node.objects.get(pk=node_pk)
+    new_annotation = annotation(node=cur_node, is_inst=False, text=note_text)
+    new_annotation.save()
+    return JsonResponse({})
+
 
 def index(request):
     data_dict = {}

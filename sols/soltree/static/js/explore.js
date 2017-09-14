@@ -1,5 +1,9 @@
-  $('.childnode').on('click', function(){
+var cur_node = null;
+
+$('.childnode').on('click', function(){
   var node_pk = parseInt($(this).attr('id').replace("node_",""));
+  $("#own-sum").val("");
+  cur_node = node_pk;
   $('.selected-sum').html($(this).find(".node-name").html());
   $.ajax({
     url : '/ajax/get_annotations/',
@@ -17,4 +21,24 @@
       }
     }
   });
+});
+
+
+$("#btn-enter").on('click', function(){
+  if(cur_node==null || $("#own-sum").val().replace( /\s/g, "")=="")
+    return;
+  var text = $("#own-sum").val().trim();
+  $.ajax({
+    url : '/ajax/add_note/',
+    data : {
+      'node_pk' : cur_node,
+      'text' : text
+    },
+    success : function()
+    {
+      $.toast('<h4>Success</h4> Your note is uploaded!', {type: 'success'});
+      $("#node_"+cur_node).click();
+      $("#own-sum").val("");
+    }
+  })
 });
