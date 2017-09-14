@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 class problem(models.Model):
     img = models.ImageField(upload_to='problem', null=True, blank=True)
     text = models.CharField(max_length=1000)
+
     def __str__(self):
         return str(self.text)
 
@@ -17,6 +18,7 @@ class solution(models.Model):
     problem = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
     img = models.ImageField(upload_to='orig/')
     tagged_img = models.ImageField(upload_to='tag', null=True, blank=True)
+    correct = models.NullBooleanField()
     def get_absolute_url(self):
         if self.pk==42:
             url = reverse_lazy('tutorial_tag')

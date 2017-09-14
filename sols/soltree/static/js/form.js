@@ -1,3 +1,5 @@
+var correct = null;
+
 function check_answer(){
   var url = window.location.href;
   var re = new RegExp('http://127.0.0.1:8000/problem([0-9]+).*')
@@ -51,9 +53,11 @@ function check_answer(){
           }
         });
         correct_btn.on('click', function(){
+          correct = true;
           $("#form-submit").click();
         });
         incorrect_btn.on('click', function(){
+          correct = false;
           $("#form-submit").click();
         });
         var answer_text = $("<p>")
@@ -84,6 +88,7 @@ function post_to_url(method) {
     path = path.replace('tag','select');
     params = {
       tag_img : tag_img,
+      correct : correct,
     };
     $(".p_sum").each(function(index){
       params['sum'+index.toString()] = $(this).text();

@@ -69,3 +69,13 @@ input[type=text]
 .sum-selected {
   background-color: #656eed !important;
 }
+
+.add_sol:hover{
+  text-decoration: underline;
+  cursor : pointer;
+}
+
+input[type='button']:hover
+{
+  cursor:pointer;
+}

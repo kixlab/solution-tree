@@ -152,7 +152,7 @@ $(".add_sol").on('click', function(){
     if(temp_div.hasClass('root'))
       break;
     var temp_p = $("<p>", {
-      class : 'line_p'
+      class : 'line_p orig_p'
     });
     var step_p = $("<span>", {
       class : 'step_p',
@@ -270,7 +270,17 @@ $(".add_sol").on('click', function(){
       class : 'new_node',
       type : 'text',
       width :  0.7 * window.innerWidth,
-    })
+    });
+    var temp_span = $("<span>", {
+      css : {
+        'margin' : '5px',
+        'font-size' : '20px',
+        'background-color' : 'red',
+        'color' : 'white'
+      }
+    });
+    temp_span.append("click check button!");
+    temp_span.hide();
     var del_div = $("<div>", {
       class : 'del_div',
       css : {
@@ -304,16 +314,27 @@ $(".add_sol").on('click', function(){
       },
       src : "/assets/img/error.png"
     });
-    // del_span.html("X");
     edit_img.on("click", function(){
       var text_input = $("<input>", {
+        class : 'new_node',
         type : 'text',
         width : 0.7 * window.innerWidth,
         placeholder : $(this).parent().parent().find(".content_div").html()
       });
+      var temp_span = $("<span>", {
+        css : {
+          'margin' : '5px',
+          'font-size' : '20px',
+          'background-color' : 'red',
+          'color' : 'white'
+        }
+      });
+      temp_span.append("click check button!");
+      temp_span.hide();
       $(this).hide();
       $(this).parent().find(".success_img").show();
       $(this).parent().parent().find(".content_div").html(text_input);
+      $(this).parent().parent().find(".content_div").append(temp_span);
     });
     edit_img.hide();
     success_img.on("click", function(){
@@ -339,6 +360,7 @@ $(".add_sol").on('click', function(){
     del_div.append(del_img);
     temp_p.html('<span class="step_p" style="float: left;">Step '+(index+1)+' :&nbsp;</span>');
     content_div.append(text_input);
+    content_div.append(temp_span);
     temp_p.append(content_div);
     temp_p.append(del_div);
     div_picked_item.append(temp_p);
@@ -351,9 +373,49 @@ $(".add_sol").on('click', function(){
     }
   });
   done_button.on("click",function (){
-    make_new_chart_config();
-    $(this).parent().remove();
-    $("#div-body").removeClass('blur');
+    if($(".add_p").length>0)
+    {
+      if($(".new_node").length>0)
+      {
+        $(".new_node").each(function(){
+          $(this).parent().find("span").show();
+        });
+        return;
+      }
+      var parent_pk = null;
+      if($(".orig_p").length==0)
+      {
+        parent_pk = 'root';
+      }
+      else {
+        parent_pk = $(".orig_p").last().find(".content_div").attr("pk");
+      }
+      var url = window.location.href;
+      var re = new RegExp('http://127.0.0.1:8000/problem([0-9]+).*')
+      var myarray = re.exec(url);
+      var problem_pk = myarray[1];
+      var data_dict = {
+        'parent_pk' : parent_pk,
+        'problem_pk' : problem_pk,
+      }
+      $(".add_p").each(function(index){
+        data_dict['node'+index] = $(this).find(".content_div").html();
+      });
+
+
+      $.ajax({
+        url : '/ajax/add_node',
+        data : data_dict,
+        success : function()
+        {
+          alert(11);
+        }
+      })
+    }
+    else {
+      $(this).parent().remove();
+      $("#div-body").removeClass('blur');
+    }
   });
   var close_button = $("<input>", {
     type : 'button',
@@ -381,51 +443,6 @@ $(".add_sol").on('click', function(){
   prompt_div.css('top', (window.innerHeight - prompt_div.height())/2);
 });
 
-jQuery.fn.reverse = [].reverse;
-var new_chart_config = chart_config;
-var parent_key = 2;
-function make_new_chart_config(){
-  new_chart_config = jQuery.extend([], chart_config);
-  var last_pk = parseInt($(".content_div").last().attr('pk'));
-  var child_config = null;
-  if($(".new_node").length == 0)
-  {
-    return;
-  }
-  $(".new_node").reverse().each(function(){
-    var temp_config = {
-      HTMLclass : 'childnode selectable new',
-      text : {
-        name : $(this).val(),
-      },
-      children : [],
-    };
-    if(child_config)
-    {
-      temp_config['children'].push(child_config);
-      child_config['new_parent'] = temp_config;
-    }
-    new_chart_config.push(temp_config);
-    child_config = temp_config;
-  });
-  if($(".content_div").length==0)
-  {
-    new_chart_config[1]['children'].push(child_config);
-    child_config['new_parent'] = new_chart_config[1];
-  }
-  else{
-    for(i=0;i<chart_config.length;i++)
-    {
-      if(new_chart_config[i]['pk']==last_pk)
-      {
-        new_chart_config[i]['children'].push(child_config);
-        child_config['new_parent'] = new_chart_config[i];
-      }
-    }
-  }
-  var tree = new Treant(new_chart_config, null, $);
-  return 0;
-}
 
 function show_refine(){
   $("#div-body").addClass('blur');
@@ -600,7 +617,6 @@ function go_submit(method){
   }
   form.submit();
 }
-
 
 $( document ).ready(function() {
     $(".root").click();

@@ -100,6 +100,18 @@ def select(request, problem_pk, pk):
                 temp_sub = sub_how_to(orig_sol=cursol, text=value, order=index)
                 temp_sub.save()
                 data_dict[key]  = value
+            elif key == 'correct':
+                if value == 'true':
+                    cursol.correct = True
+                    print(11)
+                    cursol.save()
+                elif value=='false':
+                    cursol.correct = False
+                    print(22)
+                    cursol.save()
+                else:
+                    cursol.correct = None
+                    cursol.save()
     else:
         subs = sub_how_to.objects.filter(orig_sol=cursol)
         for sub in subs:
@@ -198,6 +210,23 @@ def check_answer(request):
     else:
         data['exist'] = '0'
     return JsonResponse(data)
+
+def add_node(request):
+    problem_pk = int(request.GET.get('problem_pk'))
+    cur_prob = problem.objects.get(pk = problem_pk)
+    if request.GET.get('parent_pk') == 'root':
+        parent_node = node.objects.get(parentId=None, problem=cur_prob)
+    else:
+        parent_pk = int(request.GET.get('parent_pk'))
+        parent_node = node.objdects.get(pk=parent_pk)
+    node_array = request.GET.get('node_array')
+    for key in request.GET:
+        if 'node' in key:
+            node_text = request.GET.get(key)
+            new_node = node(parentId=parent_node, summarization=node_text, problem=cur_prob)
+            new_node.save()
+            parent_node = new_node
+    return JsonResponse({})
 
 def index(request):
     data_dict = {}

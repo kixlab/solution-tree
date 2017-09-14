@@ -1,4 +1,4 @@
-var img = document.querySelector('img');
+var img = document.querySelector('#sol-img');
 
 
 var img_height = 0;
