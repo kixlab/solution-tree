@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import solutionForm
-from .models import solution, node, sub_how_to, problem, annotation, answer
+from .models import solution, node, sub_how_to, problem, annotation, answer, node_text
 from binascii import a2b_base64
 from django.http import JsonResponse
 
@@ -241,6 +241,19 @@ def add_note(request):
     new_annotation.save()
     return JsonResponse({})
 
+def refine_node(request):
+    for key in request.GET:
+        key = int(key)
+        text = request.GET.get(key)
+        cur_node = node.objects.find(pk=key)
+        for temp_node_text in node_text.objects.filter(node=cur_node):
+            if(temp_node_text.text==text)
+                return JsonResponse({})
+        new_node_text = node_text(node=cur_node, text=text)
+        new_node_text.save()
+        return JsonResponse({})
+
+    # return JsonResponse({})
 
 def index(request):
     data_dict = {}

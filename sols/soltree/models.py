@@ -43,7 +43,8 @@ class annotation(models.Model):
     # is_instructor = models.BooleanField()
 
 class node_text(models.Model):
-    node_pk = models.ForeignKey(node, on_delete=models.CASCADE)
+    node = models.ForeignKey(node, on_delete=models.CASCADE)
+    like = models.IntegerField(default=0)
     text = models.CharField(max_length=100)
 
 class sub_how_to(models.Model):

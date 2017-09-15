@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from soltree.views import add_node, add_note, solve, check, tag, select, explore, tutorial_solve, tutorial_tag, get_annotations, check_answer, index
+from soltree.views import refine_node, add_node, add_note, solve, check, tag, select, explore, tutorial_solve, tutorial_tag, get_annotations, check_answer, index
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^ajax/check_answer/$', check_answer, name='check_answer'),
     url(r'^ajax/add_node/$', add_node, name='add_node'),
     url(r'^ajax/add_note/$', add_note, name='add_note'),
+    url(r'^ajax/refine_node/$', refine_node, name='refine_node'),
     url(r'^tutorial', tutorial_solve, name='tutorial'),
 ]
 urlpatterns += static('upload_files', document_root=settings.MEDIA_ROOT)

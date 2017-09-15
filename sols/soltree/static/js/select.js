@@ -271,6 +271,11 @@ $(".add_sol").on('click', function(){
       type : 'text',
       width :  0.7 * window.innerWidth,
     });
+    text_input.autocomplete({
+      source : sum_data,
+      minLength : 2,
+    });
+
     var temp_span = $("<span>", {
       css : {
         'margin' : '5px',
@@ -320,6 +325,10 @@ $(".add_sol").on('click', function(){
         type : 'text',
         width : 0.7 * window.innerWidth,
         placeholder : $(this).parent().parent().find(".content_div").html()
+      });
+      text_input.autocomplete({
+        source : sum_data,
+        minLength : 2,
       });
       var temp_span = $("<span>", {
         css : {
@@ -513,15 +522,6 @@ function show_refine(){
       src : "/assets/img/success.png"
     });
     success_img.hide();
-    // var del_img = $("<img>", {
-    //   css : {
-    //     'cursor' : 'pointer hand',
-    //     'width' : '30px',
-    //     'height' : '30px'
-    //   },
-    //   src : "/assets/img/error.png"
-    // });
-    // del_span.html("X");
     edit_img.on("click", function(){
       var text_input = $("<input>", {
         type : 'text',
@@ -537,6 +537,10 @@ function show_refine(){
       if(refine_text=="")
       {
          refine_text = $(this).parent().parent().find("input").attr('placeholder');
+      }
+      if(refine_text != $(this).parent().parent().find("input").attr('placeholder'))
+      {
+        $(this).parent().parent().attr("edited", "true");
       }
       $(this).parent().parent().find(".content_div").html(refine_text);
       $(this).hide();
@@ -561,7 +565,28 @@ function show_refine(){
     }
   });
   done_button.on("click",function (){
-    go_submit();
+    if($("input[type='text']").length>0)
+    {
+      $.toast("<h4>click check button!<h4>", {type : 'danger'});
+      return;
+    }
+    var params = {};
+    $(".line_p[edited='true']").each(function(){
+      var temp_pk = $(this).find(".content_div").attr("pk");
+      params[temp_pk] = $(this).find(".content_div").html();
+    });
+    if(Object.keys(params).length>0)
+    {
+      $.ajax({
+        url : '/ajax/refine_node/',
+        data : params,
+        dataType : 'json',
+        success : function(data)
+        {
+          go_submit();
+        }
+      })
+    }
     $(this).parent().remove();
     $("#div-body").removeClass('blur');
   });
@@ -578,7 +603,6 @@ function show_refine(){
     $(".last").click();
     $("#div-body").removeClass('blur');
   });
-
   prompt_div.append(p_explanation);
   prompt_div.append(div_picked_item);
   prompt_div.append(done_button);
@@ -597,9 +621,6 @@ function go_submit(method){
   var problem_pk = myarray[1];
   var path = '/problem'+problem_pk+'/explore/';
   method = method || "post";
-  params = {
-    problem_pk : problem_pk,
-  };
   var form = document.getElementById("formtag");
   form.setAttribute("action", path);
   form.submit();
