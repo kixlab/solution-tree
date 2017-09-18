@@ -247,7 +247,7 @@ def refine_node(request):
         text = request.GET.get(key)
         cur_node = node.objects.find(pk=key)
         for temp_node_text in node_text.objects.filter(node=cur_node):
-            if(temp_node_text.text==text)
+            if temp_node_text.text==text:
                 return JsonResponse({})
         new_node_text = node_text(node=cur_node, text=text)
         new_node_text.save()
