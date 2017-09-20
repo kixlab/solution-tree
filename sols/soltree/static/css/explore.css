@@ -42,5 +42,22 @@
 
 textarea
 {
-  font-size : 25px;
+  font-size : 20px;
+}
+
+#vote-button
+{
+  font-size: 13px;
+  margin-right : 5px;
+}
+
+#vote-button:hover
+{
+  text-decoration: underline;
+  cursor : pointer;
+}
+
+#status
+{
+  font-size : 13px;
 }

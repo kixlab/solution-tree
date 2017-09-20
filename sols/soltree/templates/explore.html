@@ -8,7 +8,16 @@
   <script type="text/javascript" src="{% static 'js/library/jquery.toast.min.js' %}"></script>
   <div id="div-detail" style="width:25%;float:left;">
     <p id="ee"> Detail notes </p>
-    <div id="cur-summary">Current summary<p class='selected-sum'>Prove satisfaction when everyone have same money<p></div>
+    <div id="cur-summary">
+      <div id='cur-summary-status'>
+        <p>Current summary</p>
+        <p id="status"></p>
+      </div>
+      <p class='selected-sum'>Prove satisfaction when everyone have same money</p>
+      <div style="text-align:right">
+        <span id="vote-button">vote summary</span>
+      </div>
+    </div>
     <div id="instructor-note">
       Instructor's note<br/>
       <div id='div-inst-note' class='inner-note'>Easy but essential</div>

@@ -52,10 +52,11 @@ def make_config(parent_config, parent_pk, only_img):
     if len(childs) ==0:
         parent_config['HTMLclass'] += ' leaf'
     for child in childs:
-        # print(child)
         child_config = {
             'parent_pk' : parent_pk,
             'pk' : child.pk,
+            'tot_count' : child.tot_count,
+            'right_count' : child.right_count,
             'parent' : parent_config,
             'HTMLclass' : 'childnode selectable',
             'text' : {
@@ -175,15 +176,29 @@ def explore(request, problem_pk):
 def get_annotations(request):
     node_pk = int(request.GET.get('node_pk'))
     cur_node = node.objects.get(pk=node_pk)
+    exist = answer.objects.filter(problem = cur_node.problem).exists()
     try:
         inst_note = annotation.objects.get(is_inst=True, node=cur_node).text
         data = {
-            'inst' : inst_note
+            'inst' : inst_note,
+            'tot_count' : cur_node.tot_count,
+            'answer_exist' : exist,
+            'right_count' : cur_node.right_count,
+            'problem_tot_count' : cur_node.problem.tot_count,
         }
     except annotation.DoesNotExist:
         data = {
             'inst' : 'no note from instructor',
+            'answer_exist' : exist,
+            'tot_count' : cur_node.tot_count,
+            'right_count' : cur_node.right_count,
+            'problem_tot_count' : cur_node.problem.tot_count,
         }
+    node_texts = node_text.objects.filter(node=cur_node)
+    data['text'] = []
+    for temp_text in node_texts:
+        data['text'].append(temp_text.text)
+    # print(data['text'])
     student_notes = annotation.objects.filter(node=cur_node, is_inst=False)
     student_dict = {}
     student_dict['len'] = len(student_notes)
@@ -241,19 +256,48 @@ def add_note(request):
     new_annotation.save()
     return JsonResponse({})
 
-def refine_node(request):
+def refine_node(request, problem_pk, answer_pk):
+    cur_prob = problem.objects.get(pk=int(problem_pk))
+    cur_sol = solution.objects.get(pk=int(answer_pk))
+    cur_prob.tot_count+=1
+    cur_prob.save()
     for key in request.GET:
-        key = int(key)
-        text = request.GET.get(key)
-        cur_node = node.objects.find(pk=key)
-        for temp_node_text in node_text.objects.filter(node=cur_node):
-            if temp_node_text.text==text:
-                return JsonResponse({})
-        new_node_text = node_text(node=cur_node, text=text)
-        new_node_text.save()
-        return JsonResponse({})
+        if key =='selected':
+            node_pk_list = request.GET.get(key).split()
+            for node_pk in node_pk_list:
+                cur_node = node.objects.get(pk=int(node_pk))
+                cur_node.tot_count +=1
+                if cur_sol.correct == True:
+                    cur_node.right_count +=1
+                cur_node.save()
+        else:
+            text = request.GET.get(key)
+            key = int(key)
+            cur_node = node.objects.get(pk=key)
+            for temp_node_text in node_text.objects.filter(node=cur_node):
+                if temp_node_text.text==text:
+                    return JsonResponse({})
+            new_node_text = node_text(node=cur_node, text=text)
+            new_node_text.save()
+    return JsonResponse({})
 
-    # return JsonResponse({})
+def vote_node_text(request):
+    node_pk = int(request.GET.get('node_pk'))
+    index = int(request.GET.get('index'))
+    cur_node = node.objects.get(pk=node_pk)
+    node_texts = node_text.objects.filter(node=cur_node)
+    cur_node_text=node_texts[index]
+    cur_node_text.like +=1
+    cur_node_text.save()
+    max_node_text = cur_node_text
+    max_like = cur_node_text.like
+    for temp in node_texts:
+        if temp.like > max_like:
+            max_like = temp.like
+            max_node_text = temp
+    cur_node.summarization = max_node_text.text
+    cur_node.save()
+    return JsonResponse({})
 
 def index(request):
     data_dict = {}

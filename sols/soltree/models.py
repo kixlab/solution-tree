@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 class problem(models.Model):
     img = models.ImageField(upload_to='problem', null=True, blank=True)
     text = models.CharField(max_length=1000)
-
+    tot_count = models.IntegerField(default=0)
     def __str__(self):
         return str(self.text)
 
@@ -33,6 +33,8 @@ class node(models.Model):
     parentId = models.ForeignKey('self', null=True, blank=True)
     summarization = models.CharField(max_length=100)
     problem = models.ForeignKey(problem, on_delete=models.CASCADE, null=True)
+    tot_count = models.IntegerField(default=1)
+    right_count = models.IntegerField(default=0)
     def __str__(self):
         return self.summarization
 
@@ -46,6 +48,8 @@ class node_text(models.Model):
     node = models.ForeignKey(node, on_delete=models.CASCADE)
     like = models.IntegerField(default=0)
     text = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.text)
 
 class sub_how_to(models.Model):
     orig_sol = models.ForeignKey(solution, on_delete=models.CASCADE)

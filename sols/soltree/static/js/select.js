@@ -565,28 +565,36 @@ function show_refine(){
     }
   });
   done_button.on("click",function (){
+    var url = window.location.href;
+    var re = new RegExp('http://127.0.0.1:8000/problem([0-9]+)/select/([0-9]+)')
+    var myarray = re.exec(url);
+    var problem_pk = myarray[1];
+    var answer_pk = myarray[2];
     if($("input[type='text']").length>0)
     {
       $.toast("<h4>click check button!<h4>", {type : 'danger'});
       return;
     }
-    var params = {};
+    var params = {
+      'selected' : '',
+    };
+    $(".line_p").each(function(){
+      var temp_pk = $(this).find(".content_div").attr("pk");
+      params['selected'] += temp_pk+" "
+    })
     $(".line_p[edited='true']").each(function(){
       var temp_pk = $(this).find(".content_div").attr("pk");
       params[temp_pk] = $(this).find(".content_div").html();
     });
-    if(Object.keys(params).length>0)
-    {
-      $.ajax({
-        url : '/ajax/refine_node/',
-        data : params,
-        dataType : 'json',
-        success : function(data)
-        {
-          go_submit();
-        }
-      })
-    }
+    $.ajax({
+      url : '/ajax/refine_node/'+problem_pk+'/'+answer_pk,
+      data : params,
+      dataType : 'json',
+      success : function(data)
+      {
+        go_submit();
+      }
+    });
     $(this).parent().remove();
     $("#div-body").removeClass('blur');
   });
