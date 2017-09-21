@@ -1,0 +1,10 @@
+#span-tag-tutorial
+{
+  text-decoration: underline;
+}
+
+#span-tag-tutorial:hover
+{
+  font-weight: bold;
+  cursor : pointer;
+}

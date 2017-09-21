@@ -3,10 +3,12 @@
 {% block content %}
   <script type="text/javascript" src="{% static 'js/library/html2canvas.min.js' %}"></script>
 
+  <link rel="stylesheet" href="{% static 'css/tag.css' %}">
   <div style="padding:10px">
     <div>
       <p>
-        Capture part of your solution which include key step for solving this problem
+        Drag part of your solution which include key step for solving this problem
+        <span id='span-tag-tutorial'>see tutorial</span>
       </p>
       <div id="div-img" style="width:75%;float:left;">
         <p style = 'text-align : right; max-width : 100%'>Img orientation is wrong? <span id='span-rotate' style="color : blue; text-decoration : underline;cursor : pointer;">rotate</span></p>
@@ -21,6 +23,7 @@
         <div id="sum-box"></div>
       </div>
     </div>
+    <script type="text/javascript" src="{% static 'js/tag.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/problem.js' %}"></script>
     <script>
         {% for key, value in data.items %}

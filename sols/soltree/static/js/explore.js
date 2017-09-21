@@ -1,7 +1,11 @@
 var cur_node = null;
 var vote_text = [];
 
+$(".node-status").attr('align', 'right');
+
 $('.childnode').on('click', function(){
+  $(".selected").removeClass('selected');
+  $(this).addClass('selected');
   var node_pk = parseInt($(this).attr('id').replace("node_",""));
   $("#own-sum").val("");
   cur_node = node_pk;
@@ -24,11 +28,11 @@ $('.childnode').on('click', function(){
       }
       $("#div-inst-note").html(data.inst);
       $("#div-stu-note").html('');
-      if(data.answer_exist)
-        $("#status").html("seleting ratio : "+(data.tot_count*100/data.problem_tot_count).toFixed(1)+"%, correct ratio : " + (data.right_count*100/data.tot_count).toFixed(1)+ "%");
-      else {
-        $("#status").html("seleting ratio : "+(data.tot_count*100/data.problem_tot_count).toFixed(1)+"%");
-      }
+      // if(data.answer_exist)
+      //   $("#status").html("selecting ratio : "+(data.tot_count*100/data.problem_tot_count).toFixed(1)+"%, correct ratio : " + (data.right_count*100/data.tot_count).toFixed(1)+ "%");
+      // else {
+      //   $("#status").html("selecting ratio : "+(data.tot_count*100/data.problem_tot_count).toFixed(1)+"%");
+      // }
       if(data.student_dict.len==0)
         $("#div-stu-note").append("no note from student");
       for(var i=0;i<data.student_dict.len;i++)

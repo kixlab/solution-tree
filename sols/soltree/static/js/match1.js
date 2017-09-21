@@ -16,7 +16,7 @@ function ask_summarization(sum, box) {
   var div_tot = $("<div>", {
     css : {
       height : '100px',
-      backgroundColor : "skyblue",
+      backgroundColor : "gray",
       border : "1px solid rayalblue",
       float : 'left',
     },

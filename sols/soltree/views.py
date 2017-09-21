@@ -46,36 +46,43 @@ def tag(request, problem_pk, pk):
     data_dict['data'] = data_dict
     return render(request, 'tag.html', data_dict)
 
-def make_config(parent_config, parent_pk, only_img):
+def make_config(parent_config, parent_pk, check):
     ret_list = [parent_config]
     childs = node.objects.filter(parentId = parent_pk)
     if len(childs) ==0:
         parent_config['HTMLclass'] += ' leaf'
+    else :
+        parent_config['text']['status'] = ''
     for child in childs:
-        child_config = {
-            'parent_pk' : parent_pk,
-            'pk' : child.pk,
-            'tot_count' : child.tot_count,
-            'right_count' : child.right_count,
-            'parent' : parent_config,
-            'HTMLclass' : 'childnode selectable',
-            'text' : {
-                'name' : child.summarization,
-            },
-            'HTMLid' : 'node_'+str(child.pk),
-        }
-        ret_list.extend(make_config(child_config, child.pk, check))
-    if not check :
-        add_config = {
-            'parent_pk' : parent_pk,
-            'parent' : parent_config,
-            'HTMLclass' : 'addsum',
-            'image' : '/assets/img/plus.png',
-            'text' : {
-                'name' : ' Make new step',
-            },
-        }
-        ret_list.append(add_config)
+        if check:
+            child_config = {
+                'parent_pk' : parent_pk,
+                'pk' : child.pk,
+                'tot_count' : child.tot_count,
+                'right_count' : child.right_count,
+                'parent' : parent_config,
+                'HTMLclass' : 'childnode selectable',
+                'text' : {
+                    'name' : child.summarization,
+                    'status' : 'right/total count : '+str(child.right_count)+'/'+str(child.tot_count),
+                },
+                'HTMLid' : 'node_'+str(child.pk),
+            }
+            ret_list.extend(make_config(child_config, child.pk, check))
+        if not check:
+            child_config = {
+                'parent_pk' : parent_pk,
+                'pk' : child.pk,
+                'tot_count' : child.tot_count,
+                'right_count' : child.right_count,
+                'parent' : parent_config,
+                'HTMLclass' : 'childnode selectable',
+                'text' : {
+                    'name' : child.summarization,
+                },
+                'HTMLid' : 'node_'+str(child.pk),
+            }
+            ret_list.extend(make_config(child_config, child.pk, check))
     return ret_list
 
 def select(request, problem_pk, pk):
@@ -136,7 +143,7 @@ def select(request, problem_pk, pk):
         'HTMLid' : 'node_'+str(root.pk),
         'HTMLclass' : 'root',
     }
-    tree_list = make_config(root_config, root.pk, True)
+    tree_list = make_config(root_config, root.pk, False)
     chart_config.extend(tree_list)
     tot_dict = get_dict_problem(problem_pk)
     tot_dict['data'] = data_dict
