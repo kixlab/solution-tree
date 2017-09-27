@@ -84,3 +84,19 @@ input[type='button']:hover
 {
   cursor:pointer;
 }
+
+.step_div{
+  border-radius: 3px 3px 3px;
+  background-color: #3838e8;
+  border: 1px solid white;
+  margin : 1px;
+  color : white;
+  float : left;
+  padding-right: 5px;
+  padding-top : 3px;
+  padding-bottom: 3px;
+}
+
+.step_div:hover{
+  background-color: black;
+}

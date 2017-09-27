@@ -19,6 +19,7 @@ function ask_summarization(sum, box) {
       backgroundColor : "gray",
       border : "1px solid rayalblue",
       float : 'left',
+      color : 'white',
     },
     class : 'subsum',
   })

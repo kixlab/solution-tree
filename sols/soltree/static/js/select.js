@@ -5,6 +5,7 @@ This file is for selecting node with exisitng node
 var checked = [];
 var refined_str = "";
 var is_picking = null;
+var is_picking_div = null;
 var deepest_div = null;
 var deepest_div_pk = 0;
 
@@ -28,12 +29,28 @@ $(".childnode").on("click", function(){
   if($(this).find('.div-steps').html().includes(is_picking))
   {
     $(this).removeClass("selected");
-    var temp_div = $(this).find('.div-steps')
-    temp_div.html(temp_div.html().replace(is_picking, ""));
+    var temp_divs = $(this).find('.step_div');
+    temp_divs.each(function(){
+      if($(this).html()==is_picking)
+      {
+        $(this).remove();
+      }
+    });
   }
   else {
     $(this).addClass("selected");
-    $(this).find('.div-steps').append(is_picking);
+    var temp_div = $("<div>", {
+      class : 'step_div',
+    });
+    temp_div.on("click", function(e){
+      e.stopPropagation();
+      $(this).remove();
+    });
+    $('.mensal').hover(function(e){
+    e.stopPropagation();
+    });
+    temp_div.html(is_picking);
+    $(this).find('.div-steps').append(temp_div);
   }
   var cnt = $(".childnode").length;
   if(deepest_div==null)
@@ -109,6 +126,7 @@ $(".subsum").on("click", function(){
       $(this).parent().parent().removeClass('sum-selected');
       $(this).parent().parent().addClass('sum-selecting');
       is_picking = $(this).parent().parent().find(".div_num").html();
+      is_picking_div = $(this).parent().parent();
       $(".childnode").each(function(){
         if($(this).find('.div-steps').html().includes(is_picking))
           $(this).addClass("selected");
@@ -634,6 +652,26 @@ function go_submit(method){
   form.submit();
 }
 
+$("#other-solution-div").hide();
+$("#soltree-div").hide();
+$("#other-solution-question").hover(
+  function(){
+    $("#other-solution-div").show();
+  },
+  function(){
+    $("#other-solution-div").hide();
+  });
+$( document ).ready(function() {
+    $(".root").click();
+});
+
+$("#soltree-question").hover(
+  function(){
+    $("#soltree-div").show();
+  },
+  function(){
+    $("#soltree-div").hide();
+  });
 $( document ).ready(function() {
     $(".root").click();
 });

@@ -18,7 +18,7 @@
     <div id="soltree-interface-head">
       <div style="width:50%;float:left;">
         <div id="soltree-interface-head-name" style="float:left;height:25px;">
-          <span style="font-size:20px">SOLUTION TREE</span> <img src="/assets/img/question.png" style="width:15px;height:15px;">
+          <span style="font-size:20px">SOLUTION TREE</span> <img id="soltree-question" src="/assets/img/question.png" style="width:15px;height:15px;">
         </div>
       </div>
       <div style="width:50%;float:left;height:25px;">
@@ -34,7 +34,7 @@
       </div>
       <div style="width:2%;height:10px;float:left;"></div>
       <div id="vert-line" style="width:2%;height:10px;float:left;"></div>
-      <h3 style="text-align:center;">Others' solution summarization <img src="/assets/img/question.png" style="width:15px;height:15px;"></h3>
+      <h3 style="text-align:center;">Others' solution summarization <img src="/assets/img/question.png" id="other-solution-question" style="width:15px;height:15px;"></h3>
       <div id="div-soltree" style="width:75%"></div>
       <div>
       </div>
@@ -74,7 +74,8 @@
   {%endfor%}
 </script>
 <p></p>
-
+<div id="other-solution-div">temp_div</div>
+<div id='soltree-div'>222</div>
 <script type="text/javascript" src="{% static 'js/select.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/soltree2.js' %}"></script>
 {% endblock %}
